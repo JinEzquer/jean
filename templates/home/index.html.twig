@@ -1,0 +1,1201 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Patrick's Cold Cuts - Premium Frozen Foods & Deli{% endblock %}
+
+{% block description %}Experience the finest selection of premium frozen foods, ice creams, and specialty frozen items delivered fresh daily. Quality you can taste, service you can trust.{% endblock %}
+
+{% block body %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="hero-content">
+        <div class="hero-text fade-in">
+            <h1 class="hero-title">
+                <span class="title-line">Fresh Frozen</span>
+                <span class="title-line">Quality Daily</span>
+            </h1>
+            <p class="hero-subtitle">
+                Experience the finest selection of premium frozen foods, ice creams, and specialty frozen items. 
+                Quality you can taste, service you can trust.
+            </p>
+            <div class="hero-buttons">
+                <a href="#products" class="btn btn-primary pulse">Explore Products</a>
+                <a href="#about" class="btn btn-secondary">Learn More</a>
+            </div>
+        </div>
+        
+        <div class="hero-image scale-in">
+            <div class="image-container">
+                <img src="/image/76468012-d5ef-4a7e-b2d5-d68451667914-removebg-preview.png" alt="Patrick's Cold Cuts" class="hero-logo">
+                <div class="floating-elements">
+                    <div class="floating-icon">❄️</div>
+                    <div class="floating-icon">🍦</div>
+                    <div class="floating-icon">🥩</div>
+                    <div class="floating-icon">🧊</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="scroll-indicator-hero">
+        <div class="scroll-text">Scroll to explore</div>
+        <div class="scroll-arrow">↓</div>
+    </div>
+</section>
+
+<!-- Navigation -->
+<nav class="navbar glass-card">
+    <div class="container">
+        <a href="#home" class="nav-brand" aria-label="Home">
+            <img src="/image/76468012-d5ef-4a7e-b2d5-d68451667914-removebg-preview.png" alt="Patrick's Cold Cuts" class="nav-logo">
+            <span class="brand-text">Patrick's Cold Cuts</span>
+        </a>
+        
+        <div class="nav-menu-container">
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link active">Home</a></li>
+                <li><a href="#products" class="nav-link">Products</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#services" class="nav-link">Services</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+            
+            <div class="search-container">
+                <form class="search-box" action="#" method="get">
+                    <input type="text" name="q" placeholder="Search products..." class="search-input">
+                    <button type="submit" class="search-btn">🔍</button>
+                </form>
+            </div>
+        </div>
+        
+        <button class="mobile-menu-toggle" id="mobileMenuToggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </div>
+</nav>
+
+<!-- Features Section -->
+<section class="features-section glass-card" id="products">
+    <div class="container">
+        <div class="section-header fade-in">
+            <h2 class="section-title">Why Choose Patrick's?</h2>
+            <p class="section-subtitle">We're committed to delivering excellence in every product</p>
+        </div>
+        
+        <div class="features-grid">
+            <div class="feature-card hover-lift fade-in">
+                <div class="feature-icon">❄️</div>
+                <h3>Premium Quality</h3>
+                <p>Only the finest frozen foods and ingredients make it to our shelves. Every product is carefully selected for quality and freshness.</p>
+                <div class="feature-highlight"></div>
+            </div>
+            
+            <div class="feature-card hover-lift fade-in">
+                <div class="feature-icon">🚚</div>
+                <h3>Fast Delivery</h3>
+                <p>Quick and reliable delivery service ensures your frozen goods arrive at the perfect temperature, maintaining quality from our store to your door.</p>
+                <div class="feature-highlight"></div>
+            </div>
+            
+            <div class="feature-card hover-lift fade-in">
+                <div class="feature-icon">⭐</div>
+                <h3>Expert Service</h3>
+                <p>Our knowledgeable staff provides personalized recommendations and exceptional customer service to help you find exactly what you need.</p>
+                <div class="feature-highlight"></div>
+            </div>
+            
+            <div class="feature-card hover-lift fade-in">
+                <div class="feature-icon">🏆</div>
+                <h3>Award Winning</h3>
+                <p>Recognized for excellence in the frozen food industry with multiple awards for quality, service, and customer satisfaction.</p>
+                <div class="feature-highlight"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Products Showcase -->
+<section class="products-section glass-card">
+    <div class="container">
+        <div class="section-header fade-in">
+            <h2 class="section-title">Featured Products</h2>
+            <p class="section-subtitle">Discover our most popular frozen delicacies</p>
+        </div>
+        
+        <div class="products-grid">
+            <div class="product-card hover-lift slide-in-left">
+                <div class="product-image">
+                    <div class="product-placeholder">🍦</div>
+                    <div class="product-badge">Best Seller</div>
+                </div>
+                <div class="product-info">
+                    <h3>Premium Ice Cream</h3>
+                    <p>Rich, creamy ice cream in a variety of flavors</p>
+                    <div class="product-price">$8.99</div>
+                </div>
+            </div>
+            
+            <div class="product-card hover-lift fade-in">
+                <div class="product-image">
+                    <div class="product-placeholder">🥩</div>
+                    <div class="product-badge">New</div>
+                </div>
+                <div class="product-info">
+                    <h3>Gourmet Frozen Meats</h3>
+                    <p>Premium cuts of meat, flash-frozen for freshness</p>
+                    <div class="product-price">$15.99</div>
+                </div>
+            </div>
+            
+            <div class="product-card hover-lift slide-in-right">
+                <div class="product-image">
+                    <div class="product-placeholder">🥟</div>
+                    <div class="product-badge">Popular</div>
+                </div>
+                <div class="product-info">
+                    <h3>Frozen Dumplings</h3>
+                    <p>Handcrafted dumplings with authentic flavors</p>
+                    <div class="product-price">$12.99</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- About Section -->
+<section class="about-section glass-card" id="about">
+    <div class="container">
+        <div class="about-content">
+            <div class="about-text slide-in-left">
+                <h2 class="section-title">About Patrick's Cold Cuts</h2>
+                <p class="about-description">
+                    For over two decades, Patrick's Cold Cuts has been the trusted name in premium frozen foods. 
+                    We started as a small family business with a simple mission: to provide the highest quality 
+                    frozen products to our community.
+                </p>
+                <p class="about-description">
+                    Today, we've grown into a premier destination for frozen foods, ice creams, and specialty items, 
+                    but we've never lost sight of our commitment to quality and customer service.
+                </p>
+                <div class="stats-grid">
+                    <div class="stat-item bounce-in">
+                        <div class="stat-number">20+</div>
+                        <div class="stat-label">Years Experience</div>
+                    </div>
+                    <div class="stat-item bounce-in">
+                        <div class="stat-number">1000+</div>
+                        <div class="stat-label">Happy Customers</div>
+                    </div>
+                    <div class="stat-item bounce-in">
+                        <div class="stat-number">500+</div>
+                        <div class="stat-label">Products</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="about-image scale-in">
+                <div class="image-container">
+                    <img src="/image/76468012-d5ef-4a7e-b2d5-d68451667914-removebg-preview.png" alt="Patrick's Cold Cuts Store" class="about-logo">
+                    <div class="image-overlay"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services Section -->
+<section class="services-section glass-card" id="services">
+    <div class="container">
+        <div class="section-header fade-in">
+            <h2 class="section-title">Our Services</h2>
+            <p class="section-subtitle">Comprehensive frozen food solutions for every need</p>
+        </div>
+        
+        <div class="services-grid">
+            <div class="service-card hover-lift fade-in">
+                <div class="service-icon">🛒</div>
+                <h3>Retail Sales</h3>
+                <p>Browse our extensive selection of premium frozen foods, ice creams, and specialty items in our modern retail space.</p>
+                <a href="#contact" class="service-link">Visit Store →</a>
+            </div>
+            
+            <div class="service-card hover-lift fade-in">
+                <div class="service-icon">📦</div>
+                <h3>Bulk Orders</h3>
+                <p>Special pricing and delivery for restaurants, caterers, and large families. Custom orders available.</p>
+                <a href="#contact" class="service-link">Get Quote →</a>
+            </div>
+            
+            <div class="service-card hover-lift fade-in">
+                <div class="service-icon">🚚</div>
+                <h3>Delivery Service</h3>
+                <p>Convenient home delivery with temperature-controlled vehicles to maintain product quality.</p>
+                <a href="#contact" class="service-link">Schedule Delivery →</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section class="contact-section glass-card" id="contact">
+    <div class="container">
+        <div class="section-header fade-in">
+            <h2 class="section-title">Visit Us Today</h2>
+            <p class="section-subtitle">We're here to serve you with the best frozen foods</p>
+        </div>
+        
+        <div class="contact-content">
+            <div class="contact-info fade-in">
+                <div class="contact-item hover-lift">
+                    <div class="contact-icon">📍</div>
+                    <h4>Location</h4>
+                    <p>123 Main Street<br>
+                    Downtown District<br>
+                    Your City, ST 12345</p>
+                </div>
+                
+                <div class="contact-item hover-lift">
+                    <div class="contact-icon">📞</div>
+                    <h4>Phone</h4>
+                    <p>(555) 123-PHIL<br>
+                    0935 208 7637</p>
+                </div>
+                
+                <div class="contact-item hover-lift">
+                    <div class="contact-icon">🕒</div>
+                    <h4>Hours</h4>
+                    <p>Mon-Fri: 8:00 AM - 7:00 PM<br>
+                    Saturday: 9:00 AM - 6:00 PM<br>
+                    Sunday: 10:00 AM - 4:00 PM</p>
+                </div>
+                
+                <div class="contact-item hover-lift">
+                    <div class="contact-icon">✉️</div>
+                    <h4>Email</h4>
+                    <p>info@patricksfrozengoods.com<br>
+                    orders@patricksfrozengoods.com</p>
+                </div>
+            </div>
+            
+            <div class="contact-form slide-in-right">
+                <h3>Send us a message</h3>
+                <form class="form">
+                    <div class="form-group">
+                        <input type="text" placeholder="Your Name" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <input type="email" placeholder="Your Email" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <textarea placeholder="Your Message" class="form-textarea" rows="5"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <img src="/image/76468012-d5ef-4a7e-b2d5-d68451667914-removebg-preview.png" alt="Patrick's Cold Cuts" class="footer-logo">
+                <p>Premium Quality Frozen Foods</p>
+            </div>
+            
+            <div class="footer-links">
+                <div class="footer-column">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#products">Products</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="#services">Retail Sales</a></li>
+                        <li><a href="#services">Bulk Orders</a></li>
+                        <li><a href="#services">Delivery</a></li>
+                        <li><a href="#contact">Support</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2025 Patrick's Cold Cuts. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+
+<!-- Enhanced CSS for Fascinating Customer Experience -->
+<style>
+    /* Hero Section */
+    .hero-section {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        padding: 2rem;
+        background: linear-gradient(
+            rgba(0, 0, 0, 0.3),
+            rgba(0, 0, 0, 0.5)
+        ), url('/image/l-intro-1674146599.jpg');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        color: white;
+        text-align: center;
+    }
+    
+    .hero-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        align-items: center;
+        max-width: 1200px;
+        width: 100%;
+    }
+    
+    .hero-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 4rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        animation: titleGlow 3s ease-in-out infinite alternate;
+    }
+    
+    .title-line {
+        display: block;
+        animation-delay: 0.2s;
+    }
+    
+    .title-line:last-child {
+        animation-delay: 0.4s;
+    }
+    
+    @keyframes titleGlow {
+        0% { text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 122, 204, 0.3); }
+        100% { text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5), 0 0 30px rgba(255, 107, 53, 0.4); }
+    }
+    
+    .hero-subtitle {
+        font-size: 1.3rem;
+        margin-bottom: 2rem;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        opacity: 0.9;
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .hero-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .btn {
+        padding: 1rem 2rem;
+        border-radius: var(--border-radius-lg);
+        text-decoration: none;
+        font-weight: 600;
+        transition: var(--transition-normal);
+        border: none;
+        cursor: pointer;
+        font-size: 1rem;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .btn-primary {
+        background: var(--gradient-accent);
+        color: white;
+        box-shadow: var(--shadow-lg);
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-xl);
+    }
+    
+    .btn-secondary {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(10px);
+    }
+    
+    .btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.3);
+        border-color: rgba(255, 255, 255, 0.5);
+    }
+    
+    .hero-image {
+        text-align: center;
+    }
+    
+    .image-container {
+        position: relative;
+        display: inline-block;
+    }
+    
+    .hero-logo {
+        height: 300px;
+        width: auto;
+        filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3));
+    }
+    
+    .floating-elements {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        pointer-events: none;
+    }
+    
+    .floating-icon {
+        position: absolute;
+        font-size: 2.5rem;
+        animation: float 3s ease-in-out infinite;
+    }
+    
+    .floating-icon:nth-child(1) {
+        top: 10%;
+        left: 10%;
+        animation-delay: 0s;
+    }
+    
+    .floating-icon:nth-child(2) {
+        top: 20%;
+        right: 10%;
+        animation-delay: 0.5s;
+    }
+    
+    .floating-icon:nth-child(3) {
+        bottom: 20%;
+        left: 20%;
+        animation-delay: 1s;
+    }
+    
+    .floating-icon:nth-child(4) {
+        bottom: 10%;
+        right: 20%;
+        animation-delay: 1.5s;
+    }
+    
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-20px); }
+    }
+    
+    .scroll-indicator-hero {
+        position: absolute;
+        bottom: 2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
+        color: white;
+        animation: bounce 2s infinite;
+    }
+    
+    .scroll-text {
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+        opacity: 0.8;
+    }
+    
+    .scroll-arrow {
+        font-size: 1.5rem;
+    }
+    
+    @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+        40% { transform: translateX(-50%) translateY(-10px); }
+        60% { transform: translateX(-50%) translateY(-5px); }
+    }
+    
+    /* Navigation */
+    .navbar {
+        position: fixed;
+        top: 2rem;
+        left: 2rem;
+        right: 2rem;
+        z-index: 1000;
+        padding: 1rem 2rem;
+        transition: var(--transition-normal);
+    }
+    
+    .navbar.scrolled {
+        top: 0;
+        left: 0;
+        right: 0;
+        border-radius: 0;
+    }
+    
+    .nav-brand {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        text-decoration: none;
+        color: var(--text-dark);
+    }
+    
+    .nav-logo {
+        height: 50px;
+        width: auto;
+    }
+    
+    .brand-text {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--primary-color);
+    }
+    
+    .nav-menu-container {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+    }
+    
+    .nav-menu {
+        display: flex;
+        list-style: none;
+        gap: 2rem;
+        margin: 0;
+    }
+    
+    .nav-link {
+        color: var(--text-dark);
+        text-decoration: none;
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        border-radius: var(--border-radius-lg);
+        transition: var(--transition-normal);
+        position: relative;
+    }
+    
+    .nav-link:hover,
+    .nav-link.active {
+        color: var(--primary-color);
+        background: rgba(0, 122, 204, 0.1);
+    }
+    
+    .search-container {
+        position: relative;
+    }
+    
+    .search-box {
+        display: flex;
+        align-items: center;
+        background: white;
+        border-radius: var(--border-radius-full);
+        overflow: hidden;
+        box-shadow: var(--shadow-md);
+    }
+    
+    .search-input {
+        border: none;
+        padding: 0.75rem 1rem;
+        outline: none;
+        width: 250px;
+        font-size: 0.9rem;
+    }
+    
+    .search-btn {
+        background: var(--gradient-primary);
+        border: none;
+        padding: 0.75rem 1rem;
+        color: white;
+        cursor: pointer;
+        transition: var(--transition-normal);
+    }
+    
+    .search-btn:hover {
+        background: var(--gradient-accent);
+    }
+    
+    .mobile-menu-toggle {
+        display: none;
+        flex-direction: column;
+        gap: 4px;
+        background: none;
+        border: none;
+        cursor: pointer;
+    }
+    
+    .mobile-menu-toggle span {
+        width: 25px;
+        height: 3px;
+        background: var(--text-dark);
+        transition: var(--transition-normal);
+    }
+    
+    /* Section Styles */
+    .section-header {
+        text-align: center;
+        margin-bottom: 4rem;
+    }
+    
+    .section-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 2.5rem;
+        font-weight: 600;
+        color: var(--text-dark);
+        margin-bottom: 1rem;
+    }
+    
+    .section-subtitle {
+        font-size: 1.1rem;
+        color: var(--text-light);
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    /* Features Section */
+    .features-section,
+    .products-section,
+    .about-section,
+    .services-section,
+    .contact-section {
+        margin: 2rem;
+        padding: 4rem 2rem;
+    }
+    
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2rem;
+    }
+    
+    .feature-card {
+        background: white;
+        padding: 2.5rem 2rem;
+        border-radius: var(--border-radius-xl);
+        text-align: center;
+        box-shadow: var(--shadow-md);
+        position: relative;
+        overflow: hidden;
+        transition: var(--transition-normal);
+    }
+    
+    .feature-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--gradient-primary);
+        transform: scaleX(0);
+        transition: var(--transition-normal);
+    }
+    
+    .feature-card:hover::before {
+        transform: scaleX(1);
+    }
+    
+    .feature-icon {
+        font-size: 3rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .feature-card h3 {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: var(--text-dark);
+        margin-bottom: 1rem;
+    }
+    
+    .feature-card p {
+        color: var(--text-light);
+        line-height: 1.6;
+    }
+    
+    /* Products Section */
+    .products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+    }
+    
+    .product-card {
+        background: white;
+        border-radius: var(--border-radius-xl);
+        overflow: hidden;
+        box-shadow: var(--shadow-md);
+        transition: var(--transition-normal);
+    }
+    
+    .product-image {
+        position: relative;
+        height: 200px;
+        background: var(--gradient-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .product-placeholder {
+        font-size: 4rem;
+    }
+    
+    .product-badge {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: var(--gradient-accent);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: var(--border-radius-full);
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+    
+    .product-info {
+        padding: 1.5rem;
+    }
+    
+    .product-info h3 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--text-dark);
+        margin-bottom: 0.5rem;
+    }
+    
+    .product-info p {
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+    }
+    
+    .product-price {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--primary-color);
+    }
+    
+    /* About Section */
+    .about-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        align-items: center;
+    }
+    
+    .about-description {
+        color: var(--text-light);
+        margin-bottom: 1.5rem;
+        line-height: 1.7;
+    }
+    
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+    
+    .stat-item {
+        text-align: center;
+        padding: 1.5rem;
+        background: white;
+        border-radius: var(--border-radius-lg);
+        box-shadow: var(--shadow-sm);
+    }
+    
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+    }
+    
+    .stat-label {
+        color: var(--text-light);
+        font-size: 0.9rem;
+    }
+    
+    .about-image {
+        position: relative;
+    }
+    
+    .about-logo {
+        width: 100%;
+        height: 300px;
+        object-fit: contain;
+        border-radius: var(--border-radius-xl);
+    }
+    
+    .image-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: var(--gradient-primary);
+        opacity: 0.1;
+        border-radius: var(--border-radius-xl);
+    }
+    
+    /* Services Section */
+    .services-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+    }
+    
+    .service-card {
+        background: white;
+        padding: 2.5rem 2rem;
+        border-radius: var(--border-radius-xl);
+        text-align: center;
+        box-shadow: var(--shadow-md);
+        transition: var(--transition-normal);
+    }
+    
+    .service-icon {
+        font-size: 3rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .service-card h3 {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: var(--text-dark);
+        margin-bottom: 1rem;
+    }
+    
+    .service-card p {
+        color: var(--text-light);
+        margin-bottom: 1.5rem;
+        line-height: 1.6;
+    }
+    
+    .service-link {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 600;
+        transition: var(--transition-normal);
+    }
+    
+    .service-link:hover {
+        color: var(--accent-color);
+    }
+    
+    /* Contact Section */
+    .contact-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+    }
+    
+    .contact-info {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+    }
+    
+    .contact-item {
+        text-align: center;
+        padding: 2rem 1rem;
+        background: white;
+        border-radius: var(--border-radius-lg);
+        box-shadow: var(--shadow-sm);
+        transition: var(--transition-normal);
+    }
+    
+    .contact-icon {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+    }
+    
+    .contact-item h4 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--text-dark);
+        margin-bottom: 1rem;
+    }
+    
+    .contact-item p {
+        color: var(--text-light);
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+    
+    .contact-form {
+        background: white;
+        padding: 2rem;
+        border-radius: var(--border-radius-xl);
+        box-shadow: var(--shadow-md);
+    }
+    
+    .contact-form h3 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--text-dark);
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-input,
+    .form-textarea {
+        width: 100%;
+        padding: 1rem;
+        border: 2px solid var(--bg-lighter);
+        border-radius: var(--border-radius-lg);
+        font-size: 1rem;
+        transition: var(--transition-normal);
+        background: white;
+    }
+    
+    .form-input:focus,
+    .form-textarea:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(0, 122, 204, 0.1);
+    }
+    
+    /* Footer */
+    .footer {
+        background: var(--text-dark);
+        color: white;
+        padding: 3rem 0 1rem;
+        margin-top: 2rem;
+    }
+    
+    .footer-content {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 3rem;
+        margin-bottom: 2rem;
+    }
+    
+    .footer-brand {
+        text-align: center;
+    }
+    
+    .footer-logo {
+        height: 80px;
+        width: auto;
+        margin-bottom: 1rem;
+    }
+    
+    .footer-brand p {
+        color: rgba(255,255,255,0.7);
+    }
+    
+    .footer-links {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+    }
+    
+    .footer-column h4 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: var(--primary-color);
+    }
+    
+    .footer-column ul {
+        list-style: none;
+    }
+    
+    .footer-column li {
+        margin-bottom: 0.5rem;
+    }
+    
+    .footer-column a {
+        color: rgba(255,255,255,0.7);
+        text-decoration: none;
+        transition: var(--transition-normal);
+    }
+    
+    .footer-column a:hover {
+        color: white;
+    }
+    
+    .footer-bottom {
+        text-align: center;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(255,255,255,0.1);
+        color: rgba(255,255,255,0.7);
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .hero-content {
+            grid-template-columns: 1fr;
+            text-align: center;
+        }
+        
+        .hero-title {
+            font-size: 2.5rem;
+        }
+        
+        .hero-buttons {
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .btn {
+            width: 100%;
+            max-width: 300px;
+        }
+        
+        .nav-menu-container {
+            display: none;
+        }
+        
+        .mobile-menu-toggle {
+            display: flex;
+        }
+        
+        .navbar {
+            top: 1rem;
+            left: 1rem;
+            right: 1rem;
+        }
+        
+        .features-section,
+        .products-section,
+        .about-section,
+        .services-section,
+        .contact-section {
+            margin: 1rem;
+            padding: 2rem 1rem;
+        }
+        
+        .about-content,
+        .contact-content {
+            grid-template-columns: 1fr;
+        }
+        
+        .contact-info {
+            grid-template-columns: 1fr;
+        }
+        
+        .stats-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+        
+        .footer-content {
+            grid-template-columns: 1fr;
+            text-align: center;
+        }
+        
+        .footer-links {
+            grid-template-columns: 1fr;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .hero-title {
+            font-size: 2rem;
+        }
+        
+        .section-title {
+            font-size: 2rem;
+        }
+        
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .features-grid,
+        .products-grid,
+        .services-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<!-- Enhanced JavaScript -->
+<script>
+    // Navbar scroll effect
+    window.addEventListener('scroll', function() {
+        const navbar = document.querySelector('.navbar');
+        if (window.scrollY > 100) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
+    
+    // Active navigation link
+    const navLinks = document.querySelectorAll('.nav-link');
+    const sections = document.querySelectorAll('section[id]');
+    
+    window.addEventListener('scroll', function() {
+        let current = '';
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.clientHeight;
+            if (window.scrollY >= (sectionTop - 200)) {
+                current = section.getAttribute('id');
+            }
+        });
+        
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === `#${current}`) {
+                link.classList.add('active');
+            }
+        });
+    });
+    
+    // Mobile menu toggle
+    const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+    const navMenuContainer = document.querySelector('.nav-menu-container');
+    
+    if (mobileMenuToggle && navMenuContainer) {
+        mobileMenuToggle.addEventListener('click', function() {
+            navMenuContainer.classList.toggle('active');
+            mobileMenuToggle.classList.toggle('active');
+        });
+    }
+    
+    // Form submission
+    const form = document.querySelector('.form');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            showNotification('Thank you for your message! We\'ll get back to you soon.', 'success');
+        });
+    }
+    
+    // Add staggered animation delays
+    document.addEventListener('DOMContentLoaded', function() {
+        const fadeElements = document.querySelectorAll('.fade-in');
+        fadeElements.forEach((el, index) => {
+            el.style.animationDelay = `${index * 0.1}s`;
+        });
+        
+        const slideElements = document.querySelectorAll('.slide-in-left, .slide-in-right');
+        slideElements.forEach((el, index) => {
+            el.style.animationDelay = `${index * 0.2}s`;
+        });
+        
+        const bounceElements = document.querySelectorAll('.bounce-in');
+        bounceElements.forEach((el, index) => {
+            el.style.animationDelay = `${index * 0.1}s`;
+        });
+    });
+</script>
+{% endblock %}
