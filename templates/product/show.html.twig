@@ -1,0 +1,124 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Product Details - Patrick's Cold Cuts{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Arimo:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .slide-in {
+            animation: slideIn 0.4s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+        .heading-font {
+            font-family: 'Bebas Neue', sans-serif;
+        }
+        .body-font {
+            font-family: 'Arimo', sans-serif;
+        }
+        /* Page background: dark azure */
+        body{ background: linear-gradient(180deg, #14384f, #0f2a3f) }
+        /* Disable global glass/hover effects on cards for this page */
+        .card{background:#e6f3ff !important; backdrop-filter:none !important; border:1px solid #cfe8ff; box-shadow:0 8px 24px rgba(2,8,23,.06); overflow:hidden}
+        .card::before, .card::after{content:none !important}
+        .card:hover{transform:none !important; box-shadow:0 2px 6px rgba(2,8,23,.05) !important; background:#e6f3ff !important; border-color:#cfe8ff !important}
+        /* Layout and typography tweaks for better clarity */
+        .wrap{max-width:900px;margin:24px auto;padding:0 16px}
+        .title{font-family:'Bebas Neue',sans-serif;letter-spacing:.06em;color:#0f6bdc;font-size:28px;margin:0 0 10px}
+        .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px 20px;padding:8px 10px}
+        .item{padding:6px 8px}
+        .label{color:#334155;font-weight:800;font-size:13px;margin-bottom:4px}
+        .value{color:#0f172a;font-weight:900}
+        /* Reduce image size */
+        .detail-image{max-width:320px;width:100%;height:auto;border-radius:12px;box-shadow:0 8px 24px rgba(2,8,23,.08)}
+        /* Buttons: Back (azure) and Edit (dark azure) */
+        .actions .btn{display:inline-flex;align-items:center;justify-content:center;border:none;border-radius:10px;padding:10px 16px;font-weight:900;letter-spacing:.02em;text-decoration:none;color:#fff;background:#0b3c6f}
+        .actions .btn.light{background:#0f6bdc}
+        .actions .btn:hover{filter:brightness(.98)}
+        /* Hide scrollbars but allow scrolling */
+        html, body{scrollbar-width: none; -ms-overflow-style: none}
+        body::-webkit-scrollbar{width:0;height:0}
+    </style>
+    <script>
+        tailwind.config = {
+{% endblock %}
+
+{% block body %}
+<div class="wrap">
+  <h1 class="title">Product Details</h1>
+  <div class="card">
+    {% set embed = app.request.query.get('embed') == '1' %}
+    {% set q = embed ? {'embed': 1} : {} %}
+    {% set img = (product.imagePath is defined and product.imagePath) ? product.imagePath
+      : (product.image is defined and product.image ? product.image
+      : (product.photo is defined and product.photo ? product.photo
+      : (product.picture is defined and product.picture ? product.picture : null))) %}
+    {% if not img %}
+      {% set n = product.name|lower %}
+      {% if 'chicken' in n %}
+        {% set img = 'image/chicken.jpg' %}
+      {% elseif 'fish' in n %}
+        {% set img = 'image/fish.jpg' %}
+      {% elseif 'lobster' in n %}
+        {% set img = 'image/lobster.jpg' %}
+      {% elseif 'sausage' in n %}
+        {% set img = 'image/sausage.jpg' %}
+      {% elseif 'steak' in n %}
+        {% set img = 'image/steak.jpg' %}
+      {% elseif 'crab' in n %}
+        {% set img = 'image/crabs.jpg' %}
+      {% elseif 'mutton' in n %}
+        {% set img = 'image/mutton.jpg' %}
+      {% elseif 'pork' in n %}
+        {% set img = 'image/frozen1.jpg' %}
+      {% endif %}
+    {% endif %}
+    {% set src = img ? asset(img) : asset('image/logo.png') %}
+
+    <div class="grid">
+      <div class="item" style="grid-column: 1 / -1; display:flex; justify-content:center; padding:12px 0">
+        <img class="detail-image" src="{{ src }}" alt="{{ product.name }}">
+      </div>
+      <div class="item">
+        <div class="label">Product ID</div>
+        <div class="value">{{ product.id }}</div>
+      </div>
+      <div class="item">
+        <div class="label">Product Name</div>
+        <div class="value">{{ product.name }}</div>
+        {% if product.category %}<div style="color:#64748b;margin-top:4px">Category: {{ product.category.name }}</div>{% endif %}
+      </div>
+      <div class="item">
+        <div class="label">Price</div>
+        <div class="value">{{ product.price is not null ? ('₱' ~ product.price|number_format(2, '.', ',')) : '-' }}</div>
+      </div>
+      <div class="item">
+        <div class="label">Expiry Date</div>
+        <div class="value">{{ product.expiryDate ? product.expiryDate|date('M d, Y') : '—' }}</div>
+      </div>
+    </div>
+    <div class="actions" style="display:flex; justify-content:space-between; align-items:center; gap:12px; margin-top:16px">
+      {% if embed %}
+        <a class="btn light" href="#" onclick="try{ window.parent.closeViewProduct(); }catch(_){ } return false;">Back to List</a>
+        <a class="btn" href="#" onclick="try{ window.parent.openEditProduct({{ product.id }}); }catch(_){ } return false;">Edit Product</a>
+      {% else %}
+        <a class="btn light" href="{{ path('app_product_index') }}">Back to List</a>
+        <a class="btn" href="{{ path('app_product_edit', {id: product.id}) }}">Edit Product</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

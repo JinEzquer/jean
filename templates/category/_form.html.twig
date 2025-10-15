@@ -1,0 +1,27 @@
+<style>
+  :root{--accent:#005F99;--accent2:#00BFFF;--danger:#D72638;--border:#e5e7eb}
+  .fwrap{display:grid;gap:16px}
+  .row{display:flex;flex-direction:column;gap:6px}
+  label{font-weight:800;font-size:12px;color:#334155}
+  .ctrl{border:2px solid var(--border);border-radius:10px;padding:12px 14px;font-family:'Arimo',sans-serif}
+  .ctrl:focus{border-color:var(--accent2);outline:none;box-shadow:0 0 0 3px rgba(0,191,255,.15)}
+  .actions{display:flex;gap:10px;align-items:center}
+  .btn{display:inline-flex;align-items:center;gap:8px;background:#D72638;color:#fff;border:none;border-radius:10px;padding:10px 14px;font-weight:800;cursor:pointer;text-decoration:none}
+  .btn.secondary{background:var(--accent)}
+</style>
+
+{{ form_start(form, {'attr': {'class': 'fwrap'}}) }}
+  <div class="row">
+    <label for="{{ form.name.vars.id }}">Name</label>
+    {{ form_widget(form.name, {'attr': {'class': 'ctrl', 'placeholder':'Enter category name'}}) }}
+    {{ form_errors(form.name) }}
+  </div>
+  <div class="row">
+    <label for="{{ form.description.vars.id }}">Description</label>
+    {{ form_widget(form.description, {'attr': {'class': 'ctrl', 'rows': 4, 'placeholder':'Optional description'}}) }}
+    {{ form_errors(form.description) }}
+  </div>
+  <div class="actions">
+    <button class="btn">{{ button_label|default('Save') }}</button>
+  </div>
+{{ form_end(form) }}

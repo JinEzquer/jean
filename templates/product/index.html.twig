@@ -1,0 +1,237 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Products{% endblock %}
+
+{% block stylesheets %}
+  {{ parent() }}
+  <style>
+    body{background: linear-gradient(rgba(3,14,23,.35), rgba(3,14,23,.35)), url('{{ asset('image/frozen.jpg') }}') center / cover no-repeat fixed}
+    /* Hide scrollbars but allow scrolling */
+    html, body{scrollbar-width: none; -ms-overflow-style: none}
+    body::-webkit-scrollbar{width:0;height:0}
+    .wrap{max-width:none;width:100%;margin:24px auto;padding:0 16px}
+    .title{font-family:'Bebas Neue',sans-serif;letter-spacing:.06em;font-size:34px;margin:0 0 12px}
+    .actions{display:flex;justify-content:flex-end;align-items:center;margin-bottom:12px}
+    .btn{display:inline-flex;align-items:center;gap:8px;background:#D72638;color:#fff;border:none;border-radius:10px;padding:10px 14px;font-weight:800;text-decoration:none}
+    .card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden}
+    /* Cards grid */
+    .grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(200px, 1fr));gap:16px;margin-bottom:18px}
+    .p-card{background:#fff;border:1px solid #e5e7eb;border-radius:16px;overflow:hidden;box-shadow:0 8px 24px rgba(2,8,23,.06)}
+    .p-card .thumb{width:100%;aspect-ratio:4/3;object-fit:cover;background:#f1f5f9}
+    .p-card .body{padding:12px 14px}
+    .p-card .name{font-weight:800;margin:4px 0 6px}
+    .p-card .cat{color:#64748b;font-weight:700;margin-bottom:6px}
+    .p-card .desc{color:#6b7280;margin-bottom:8px}
+    .p-card .price{font-weight:900;color:#0f6bdc;margin:6px 0 10px}
+    .p-card .row{display:flex;gap:8px}
+    .p-card .btn{flex:1;display:inline-flex;align-items:center;justify-content:center;background:#38bdf8;color:#fff;border:none;border-radius:10px;padding:8px 10px;font-weight:800;text-decoration:none;font-size:13px}
+    .p-card .btn.secondary{background:#0b3c6f}
+    /* Modal overlay for Create Product */
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;align-items:center;justify-content:center;z-index:1000}
+    /* View modal should not dim/alter background */
+    #modalView.modal-overlay{background:transparent}
+    .modal{width:min(720px,94vw);max-height:90vh;background:#ffffff;border-radius:14px;box-shadow:0 18px 48px rgba(2,8,23,.35);overflow:hidden;border:1px solid #e5e7eb}
+    .modal header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid #e5e7eb;background:#f8fafc;font-weight:800}
+    .modal .body{height:min(70vh, 680px)}
+    .modal .body iframe{width:100%;height:100%;border:0;background:transparent}
+    .blurred{filter: blur(3px) brightness(.92); transition: filter .15s ease}
+    .p-card .btn.danger{background:#ef4444}
+    table{width:100%;border-collapse:collapse}
+    th{background:#0f6bdc;color:#fff;text-align:left;padding:12px;font-weight:800}
+    td{padding:12px;border-top:1px solid #e5e7eb}
+    /* Subtle row hover only (no movement) */
+    tr:hover{background:#f8fbff; transform:none !important; box-shadow:none !important}
+    .table-row-hover:hover{transform:none !important; box-shadow:none !important}
+    .card:hover{transform:none !important; box-shadow:0 2px 6px rgba(2,8,23,.05) !important}
+    .muted{padding:14px;color:#6b7280}
+    .link{color:#0f6bdc;text-decoration:none;font-weight:700}
+    .chip{padding:4px 8px;border-radius:999px;border:1px solid #cbd5e1;font-size:12px}
+  </style>
+{% endblock %}
+
+{% block body %}
+  {% set embed = app.request.query.get('embed') == '1' %}
+  {% set q = embed ? {'embed': 1} : {} %}
+  <div class="wrap" id="contentWrap">
+    <div class="actions">
+      {% if is_granted('ROLE_ADMIN') %}
+      <a class="btn" href="#" onclick="openNewProduct(); return false;">+ New Product</a>
+      {% endif %}
+    </div>
+
+  <!-- Modal: Edit Product -->
+  <div class="modal-overlay" id="modalEdit">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalEditTitle">
+      <header>
+        <div id="modalEditTitle">Edit Product</div>
+        <button type="button" onclick="closeEditProduct()" style="background:transparent;border:0;font-weight:900;cursor:pointer">✕</button>
+      </header>
+      <div class="body">
+        <iframe id="iframeEdit" referrerpolicy="no-referrer"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: View Product -->
+  <div class="modal-overlay" id="modalView">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalViewTitle">
+      <header>
+        <div id="modalViewTitle">Product Details</div>
+        <button type="button" onclick="closeViewProduct()" style="background:transparent;border:0;font-weight:900;cursor:pointer">✕</button>
+      </header>
+      <div class="body">
+        <iframe id="iframeView" referrerpolicy="no-referrer"></iframe>
+      </div>
+    </div>
+  </div>
+
+    {# Product cards with images #}
+    <div class="grid">
+      {% for product in products %}
+        {% set img = (product.imagePath is defined and product.imagePath) ? product.imagePath
+          : (product.image is defined and product.image ? product.image
+          : (product.photo is defined and product.photo ? product.photo
+          : (product.picture is defined and product.picture ? product.picture : null))) %}
+        {# If no image in entity, map by name to your provided files #}
+        {% if not img %}
+          {% set n = product.name|lower %}
+          {% if 'chicken' in n %}
+            {% set img = 'image/chicken.jpg' %}
+          {% elseif 'fish' in n %}
+            {% set img = 'image/fish.jpg' %}
+          {% elseif 'lobster' in n %}
+            {% set img = 'image/lobster.jpg' %}
+          {% elseif 'sausage' in n %}
+            {% set img = 'image/sausage.jpg' %}
+          {% elseif 'steak' in n %}
+            {% set img = 'image/steak.jpg' %}
+          {% elseif 'crab' in n %}
+            {% set img = 'image/crabs.jpg' %}
+          {% elseif 'mutton' in n %}
+            {% set img = 'image/mutton.jpg' %}
+          {% elseif 'pork' in n %}
+            {% set img = 'image/frozen1.jpg' %}
+          {% elseif 'ham' in n %}
+            {% set img = 'image/ham.jpg' %}
+          {% endif %}
+        {% endif %}
+        {% set src = img ? asset(img) : asset('image/logo.png') %}
+        <div class="p-card">
+          <img class="thumb" src="{{ src }}" alt="{{ product.name }}">
+          <div class="body">
+            <div class="name">{{ product.name }}</div>
+            <div class="cat">{{ product.category ? product.category.name : 'Uncategorized' }}</div>
+            {% if product.description is defined and product.description %}
+              <div class="desc">{{ product.description }}</div>
+            {% endif %}
+            <div class="price">{{ product.price is not null ? ('₱' ~ product.price) : '—' }}</div>
+            <div class="row">
+              <a class="btn" href="#" onclick="openViewProduct({{ product.id }}); return false;">View</a>
+              {% if is_granted('ROLE_ADMIN') %}
+                <a class="btn secondary" href="#" onclick="openEditProduct({{ product.id }}); return false;">Edit</a>
+                {{ include('product/_delete_form.html.twig', { product: product }) }}
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    {# Legacy table removed: cards above now provide View/Edit/Delete (CRUD) #}
+  </div>
+
+  <!-- Modal: Create Product -->
+  <div class="modal-overlay" id="modalNew">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalNewTitle">
+      <header>
+        <div id="modalNewTitle">Add Product</div>
+        <button type="button" onclick="closeNewProduct()" style="background:transparent;border:0;font-weight:900;cursor:pointer">✕</button>
+      </header>
+      <div class="body">
+        <iframe id="iframeNew" referrerpolicy="no-referrer"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      const modal = document.getElementById('modalNew');
+      const frame = document.getElementById('iframeNew');
+      const wrap = document.getElementById('contentWrap');
+      const newUrl = '{{ path('app_product_new', q) }}';
+      function onFrameLoad(){
+        try{
+          const loc = frame.contentWindow.location;
+          const p = (loc && loc.pathname) ? loc.pathname : '';
+          const q = (loc && loc.search) ? loc.search : '';
+          // If server hints to close (modal=close), close immediately
+          if(q && /[?&]modal=close\b/.test(q)){ closeNewProduct(true); return; }
+          // Keep modal open only while on the create form (/product/new)
+          const isOnNew = p.endsWith('/product/new');
+          if(!isOnNew){ closeNewProduct(true); }
+        }catch(_){ /* same-origin, just in case */ }
+      }
+      window.openNewProduct = function(){
+        if(wrap) wrap.classList.add('blurred');
+        if(frame){ frame.src = newUrl; }
+        if(modal) { modal.style.display = 'flex'; }
+        if(frame){ frame.removeEventListener('load', onFrameLoad); frame.addEventListener('load', onFrameLoad); }
+      };
+      window.closeNewProduct = function(reload){
+        if(modal) modal.style.display = 'none';
+        if(wrap) wrap.classList.remove('blurred');
+        if(frame){ try{ frame.src = 'about:blank'; }catch(_){} }
+        if(reload){
+          try{ window.scrollTo({top:0, behavior:'instant'}); }catch(_){ try{ window.scrollTo(0,0); }catch(_){} }
+          try{ location.reload(); }catch(_){}
+        }
+      };
+
+      // View Product modal
+      const modalView = document.getElementById('modalView');
+      const frameView = document.getElementById('iframeView');
+      function onViewLoad(){ /* no-op; keep modal open */ }
+      window.openViewProduct = function(id){
+        /* do not blur background to keep arrangement and background unchanged */
+        if(frameView){ frameView.src = '{{ path('app_product_show', {id: 0} | merge(q))|replace({'0':'__ID__'}) }}'.replace('__ID__', id); }
+        if(modalView) { modalView.style.display = 'flex'; }
+        if(frameView){ frameView.removeEventListener('load', onViewLoad); frameView.addEventListener('load', onViewLoad); }
+      };
+      window.closeViewProduct = function(){
+        if(modalView) modalView.style.display = 'none';
+        /* nothing else to revert */
+      };
+
+      // Edit Product modal
+      const modalEdit = document.getElementById('modalEdit');
+      const frameEdit = document.getElementById('iframeEdit');
+      function onEditLoad(){
+        try{
+          const loc = frameEdit.contentWindow.location;
+          const href = (loc && loc.href) ? loc.href : '';
+          const path = (loc && loc.pathname) ? loc.pathname : '';
+          const q = (loc && loc.search) ? loc.search : '';
+          // Ignore the initial about:blank load
+          if(!path || path === 'about:blank') return;
+          const reEdit = /(\/index\.php)?\/product\/[0-9]+\/edit(\?|$)/;
+          const reIndex = /(\/index\.php)?\/product\/?(\?|$)/;
+          const isOnEdit = reEdit.test(href) || reEdit.test(path);
+          const isIndex  = reIndex.test(href) || reIndex.test(path);
+          // If server hints to close (modal=close), close immediately
+          if(q && /[?&]modal=close\b/.test(q)){ closeEditProduct(true); return; }
+          if(!isOnEdit && isIndex){ closeEditProduct(true); }
+        }catch(_){ }
+      }
+      window.openEditProduct = function(id){
+        if(frameEdit){ frameEdit.src = '{{ path('app_product_edit', {id: 0} | merge(q))|replace({'0':'__ID__'}) }}'.replace('__ID__', id); }
+        if(modalEdit) { modalEdit.style.display = 'flex'; }
+        if(frameEdit){ frameEdit.removeEventListener('load', onEditLoad); frameEdit.addEventListener('load', onEditLoad); }
+      };
+      window.closeEditProduct = function(reload){
+        if(modalEdit) modalEdit.style.display = 'none';
+        if(frameEdit){ try{ frameEdit.src = 'about:blank'; }catch(_){} }
+        if(reload){ try{ location.reload(); }catch(_){} }
+      };
+    })();
+  </script>
+{% endblock %}

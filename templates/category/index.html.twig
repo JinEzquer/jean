@@ -1,0 +1,104 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Categories · Patrick's Cold Cuts{% endblock %}
+
+{% block body %}
+    <style>
+      :root{--accent:#005F99;--accent2:#00BFFF;--danger:#D72638;--border:#e5e7eb;--card:#fff;--muted:#64748b}
+      body{background: linear-gradient(rgba(3,14,23,.45), rgba(3,14,23,.45)), url('{{ asset('image/frozenmeat.jpg') }}') center / cover no-repeat fixed}
+      /* Hide scrollbars but allow scrolling */
+      html, body{scrollbar-width: none; -ms-overflow-style: none}
+      body::-webkit-scrollbar{width:0;height:0}
+      .wrap{max-width:1000px;margin:40px auto;padding:0 16px}
+      .head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+      .title{font-family:'Bebas Neue',sans-serif;font-size:34px;letter-spacing:.03em;color:var(--accent)}
+      .btn{display:inline-flex;align-items:center;gap:8px;background:var(--danger);color:#fff;border:none;border-radius:10px;padding:10px 14px;font-weight:800;text-decoration:none}
+      .btn.secondary{background:var(--accent)}
+      .card{background:var(--card);border:1px solid var(--border);border-radius:14px;box-shadow:0 6px 16px rgba(0,0,0,.05);overflow:hidden}
+      .card::before,.card::after{content:none !important}
+      .card:hover{transform:none !important; box-shadow:0 2px 6px rgba(2,8,23,.05) !important; background:var(--card) !important; border-color:var(--border) !important}
+      /* Cards grid like Products */
+      .grid{display:grid;grid-template-columns:repeat( auto-fit, minmax(220px, 1fr) );gap:16px;margin-bottom:18px}
+      .c-card{background:#fff;border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:0 8px 24px rgba(2,8,23,.06)}
+      .c-card .thumb{width:100%;aspect-ratio:4/3;object-fit:cover;background:#f1f5f9}
+      .c-card .body{padding:12px 14px}
+      .c-card .name{font-weight:800;margin:4px 0 6px}
+      .c-card .desc{color:#6b7280;margin-bottom:10px}
+      .c-card .row{display:flex;gap:8px}
+      .c-card .btn{flex:1;display:inline-flex;align-items:center;justify-content:center;background:#38bdf8;color:#fff;border:none;border-radius:10px;padding:8px 10px;font-weight:800;text-decoration:none;font-size:13px}
+      .c-card .btn.secondary{background:#0b3c6f}
+      table{width:100%;border-collapse:collapse}
+      thead{background:var(--accent);color:#fff}
+      th,td{padding:12px 14px;border-bottom:1px solid var(--border);text-align:left;font-family:'Arimo',sans-serif}
+      tbody tr:hover{background:#f8fafc}
+      .actions a{margin-right:10px;color:var(--accent);text-decoration:none;font-weight:700}
+      .empty{padding:18px;color:var(--muted)}
+    </style>
+
+    <div class="wrap">
+      {% set embed = app.request.query.get('embed') == '1' %}
+      {% set q = embed ? {'embed': 1} : {} %}
+      <div class="head">
+        <!-- Title removed as requested -->
+        <div></div>
+        <a class="btn" href="{{ path('app_category_new', q) }}">+ New Category</a>
+      </div>
+      {# Category cards with images #}
+      <div class="grid">
+        {% for category in categories %}
+          {% set n = category.name|lower %}
+          {% if 'white' in n %}
+            {% set img = 'image/whitemeat.jpg' %}
+          {% elseif 'seafood' in n %}
+            {% set img = 'image/seafoods.jpg' %}
+          {% elseif 'red' in n %}
+            {% set img = 'image/redmeat.jpg' %}
+          {% elseif 'processed' in n %}
+            {% set img = 'image/processed meats.jpg' %}
+          {% else %}
+            {% set img = null %}
+          {% endif %}
+          {% set src = img ? asset(img) : asset('image/logo.png') %}
+          <div class="c-card">
+            <img class="thumb" src="{{ src }}" alt="{{ category.name }}">
+            <div class="body">
+              <div class="name">{{ category.name }}</div>
+              <div class="desc">{{ category.description ?: '-' }}</div>
+              <div class="row">
+                <a class="btn" href="{{ path('app_category_show', {'id': category.id} | merge(q)) }}">View</a>
+                <a class="btn secondary" href="{{ path('app_category_edit', {'id': category.id} | merge(q)) }}">Edit</a>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+      <div class="card">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for category in categories %}
+            <tr>
+              <td>#{{ category.id }}</td>
+              <td>{{ category.name }}</td>
+              <td>{{ category.description ?: '-' }}</td>
+              <td class="actions">
+                <a href="{{ path('app_category_show', {'id': category.id} | merge(q)) }}">View</a>
+                <a href="{{ path('app_category_edit', {'id': category.id} | merge(q)) }}">Edit</a>
+              </td>
+            </tr>
+          {% else %}
+            <tr><td colspan="4" class="empty">No categories yet.</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+{% endblock %}
+

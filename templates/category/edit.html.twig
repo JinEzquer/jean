@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Category · Patrick's Cold Cuts{% endblock %}
+
+{% block body %}
+    <style>
+      :root{--accent:#005F99;--accent2:#00BFFF;--danger:#D72638;--border:#e5e7eb;--card:#fff}
+      .wrap{max-width:720px;margin:40px auto;padding:0 16px}
+      .head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+      .title{font-family:'Bebas Neue',sans-serif;font-size:34px;letter-spacing:.03em;color:var(--accent)}
+      .card{background:var(--card);border:1px solid var(--border);border-radius:14px;box-shadow:0 6px 16px rgba(0,0,0,.05);padding:18px}
+      .actions{display:flex;justify-content:space-between;align-items:center;margin-top:16px}
+      .btn{display:inline-flex;align-items:center;gap:8px;background:#D72638;color:#fff;border:none;border-radius:10px;padding:10px 14px;font-weight:800;text-decoration:none}
+      .link{color:var(--accent);text-decoration:none;font-weight:700}
+      .danger{background:#991b1b}
+    </style>
+
+    <div class="wrap">
+      <div class="head">
+        <img src="{{ asset('images/logo.png') }}" alt="Logo" style="width:36px;height:36px;border-radius:8px;object-fit:contain;background:#e6f3ff;padding:4px">
+        <div class="title">Edit Category</div>
+      </div>
+      {# Category image preview #}
+      {% set n = category.name|lower %}
+      {% if 'white' in n %}
+        {% set img = 'image/whitemeat.jpg' %}
+      {% elseif 'seafood' in n %}
+        {% set img = 'image/seafoods.jpg' %}
+      {% elseif 'red' in n %}
+        {% set img = 'image/redmeat.jpg' %}
+      {% elseif 'processed' in n %}
+        {% set img = 'image/processed meats.jpg' %}
+      {% else %}
+        {% set img = null %}
+      {% endif %}
+      {% if img %}
+        <div style="display:flex;justify-content:center;margin:8px 0 14px">
+          <img src="{{ asset(img) }}" alt="{{ category.name }}" style="max-width:520px;width:100%;height:auto;border-radius:12px;box-shadow:0 8px 24px rgba(2,8,23,.08)">
+        </div>
+      {% endif %}
+      <div class="card">
+        {{ include('category/_form.html.twig', {'button_label': 'Update'}) }}
+        <div class="actions">
+          <a class="link" href="{{ path('app_category_index') }}">← Back to Categories</a>
+          <div>
+            {{ include('category/_delete_form.html.twig') }}
+          </div>
+        </div>
+      </div>
+    </div>
+{% endblock %}
