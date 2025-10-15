@@ -1,0 +1,83 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Product - Patrick's Cold Cuts{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <style>
+        /* Removed page background image to avoid duplicate visuals */
+        body{background:#f5f7fb}
+        .wrap{max-width:860px;margin:28px auto;padding:0 16px}
+        .title{font-family:'Bebas Neue',sans-serif;letter-spacing:.08em;font-size:36px;margin:0 0 12px;color:#0f6bdc;text-transform:uppercase}
+        .card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:18px 18px 14px;position:relative;overflow:visible;box-shadow:0 18px 36px rgba(2,8,23,.18)}
+        .card:before{content:"";position:absolute;left:0;right:0;top:0;height:6px;border-top-left-radius:14px;border-top-right-radius:14px;background:linear-gradient(90deg,#0f6bdc,#00bfff)}
+        /* Disable global glass/hover effects */
+        .card::after{content:none !important}
+        .card:hover{transform:none !important; box-shadow:0 2px 6px rgba(2,8,23,.05) !important; background:#fff !important; border-color:#e5e7eb !important}
+        .form-grid{display:grid;grid-template-columns:180px 1fr;gap:10px 16px;align-items:center}
+        label{font-weight:800;color:#0f172a}
+        .field{width:100%;padding:10px 12px;border:1px solid #cbd5e1;border-radius:10px}
+        .hint{color:#6b7280;font-size:12px;margin-top:2px}
+        .actions{display:flex;align-items:center;justify-content:flex-end;margin-top:12px;gap:16px}
+        .btn{display:inline-flex;align-items:center;gap:8px;background:#D72638;color:#fff;border:none;border-radius:10px;padding:10px 16px;font-weight:900;letter-spacing:.02em;text-decoration:none}
+        .btn:hover{filter:brightness(.95)}
+        .link{color:#0f6bdc;text-decoration:none;font-weight:800}
+        .link:hover{text-decoration:underline}
+        select{position:relative;z-index:5}
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-red': '#D72638',
+                        'brand-azure': '#00BFFF',
+                        'brand-blue': '#007FFF',
+                        'brand-dark': '#005F99',
+                    }
+                }
+{% endblock %}
+
+{% block body %}
+<div class="wrap">
+  <h1 class="title">Add Product</h1>
+  <div class="card">
+    {% set embed = app.request.query.get('embed') == '1' %}
+    {% set q = embed ? {'embed': 1} : {} %}
+    {{ form_start(form, {'attr': {'class': 'form'}, 'action': path('app_product_new', q) }) }}
+      <div class="form-grid">
+        <label for="{{ form.name.vars.id }}">Product name</label>
+        <div>
+          {{ form_widget(form.name, {attr:{class:'field',placeholder:'Enter product name'}}) }}
+          {{ form_errors(form.name) }}
+        </div>
+
+        <label for="{{ form.category.vars.id }}">Category</label>
+        <div>
+          {{ form_widget(form.category, {attr:{class:'field'}}) }}
+          {{ form_errors(form.category) }}
+        </div>
+
+        <label for="{{ form.price.vars.id }}">Price</label>
+        <div>
+          {{ form_widget(form.price, {attr:{class:'field',placeholder:'0.00',step:'0.01'}}) }}
+          {{ form_errors(form.price) }}
+        </div>
+
+        <label for="{{ form.expiryDate.vars.id }}">Expiry date</label>
+        <div>
+          {{ form_widget(form.expiryDate, {attr:{class:'field',placeholder:'Select expiry date'}}) }}
+          {{ form_errors(form.expiryDate) }}
+        </div>
+      </div>
+      <div class="actions">
+        <a class="link" href="{{ path('app_product_index', q) }}">Back to list</a>
+        <button class="btn" type="submit">Create Product</button>
+      </div>
+    {{ form_end(form) }}
+  </div>
+</div>
+{% endblock %}

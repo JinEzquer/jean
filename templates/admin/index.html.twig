@@ -1,0 +1,429 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin · {{ page_title|default('Dashboard') }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+  <style>
+    :root{--side:#0f2433;--side2:#0b1d2a;--text:#0f172a;--muted:#6b7280;--accent:#007FFF;--danger:#D72638;--card:#fff;--border:#e5e7eb}
+    html, body{margin:0; padding:0}
+    body{color:var(--text);font-family:'Arimo',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+    /* Make admin full-bleed */
+    .page-main.container{max-width:100% !important; width:100% !important; padding-left:0 !important; padding-right:0 !important}
+    .shell{display:block;min-height:100vh; width:100%}
+    /* Keep sidebar fixed and visible while scrolling */
+    .sidebar{position:fixed; left:0; width:260px; top:88px; bottom:0; overflow-y:auto; background:linear-gradient(180deg,var(--side),var(--side2)); color:#e5eff7; padding:24px 18px 18px; display:flex; flex-direction:column; gap:14px; z-index:40}
+    .brand{display:flex;align-items:center;justify-content:center;gap:12px;color:#fff;font-weight:900; padding:10px 0 18px; width:100%; text-align:center}
+    .brand .avatar{width:64px;height:64px;border-radius:50%;background:#e6f3ff;display:flex;align-items:center;justify-content:center;color:#0b1d2a;font-weight:900;box-shadow:0 6px 16px rgba(0,0,0,.25); font-size:28px;}
+    .brand span{font-weight:900; letter-spacing:.06em}
+    .brand .status{display:flex;align-items:center;gap:8px;font-weight:700;color:#86efac}
+    .brand .status .dot{width:10px;height:10px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 0 rgba(34,197,94,.7);animation:onlineBlink 1.6s infinite ease-in-out}
+    @keyframes onlineBlink{0%{opacity:.25; transform:scale(.9)}50%{opacity:1; transform:scale(1)}100%{opacity:.25; transform:scale(.9)}}
+    .nav{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+    .nav a{display:flex;align-items:center;gap:10px;color:#cbd5e1;text-decoration:none;padding:10px 12px;border-radius:10px}
+    .nav a .icon{width:18px;height:18px;display:inline-flex}
+    .nav a .icon svg{width:18px;height:18px;stroke:currentColor}
+    /* Subtle hover, not aggressive */
+    .nav a:hover{background:rgba(255,255,255,.04);color:#eaf2f8}
+    /* Remove solid box for active item */
+    .nav a.active{background:transparent; color:#eaf2f8; box-shadow:none}
+    /* But still highlight when hovering the active item */
+    .nav a.active:hover{background:rgba(255,255,255,.08); color:#fff; box-shadow: inset 0 0 0 1px rgba(255,255,255,.10)}
+    .topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;border-bottom:1px solid rgba(15,23,42,.08);background:#f8fafc}
+    .main{display:flex;flex-direction:column; margin-left:260px}
+    .content{padding:18px 22px}
+    .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:0 2px 6px rgba(2,8,23,.05)}
+    .card .inner{padding:14px}
+    /* Do not move cards/tiles on hover */
+    .card:hover{transform:none !important; box-shadow:0 2px 6px rgba(2,8,23,.05) !important}
+    .social{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:18px}
+    .tile{border-radius:8px;color:#fff;padding:14px;font-weight:800; transition:background .15s ease}
+    .tile:hover{transform:none !important; box-shadow:none !important; filter:brightness(.98)}
+    /* Allow subtle hover ONLY on dashboard KPI cards and social tiles */
+    #panel-dashboard .kpis .card:hover{transform:translateY(-2px) !important; box-shadow:0 6px 16px rgba(2,8,23,.12) !important}
+    #panel-dashboard .social .tile:hover{transform:translateY(-1px) !important; box-shadow:0 4px 10px rgba(2,8,23,.10) !important; filter:none}
+    .fb{background:#3b5998}.tw{background:#1da1f2}.li{background:#0a66c2}.gp{background:#db4437}
+    .charts{display:grid;grid-template-columns:repeat(2, 1fr);gap:18px;margin-top:18px}
+    .row-two{display:grid;grid-template-columns:repeat(2, 1fr);gap:18px;margin-top:18px}
+    .chart-card header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border);background:#f8fafc;border-top-left-radius:12px;border-top-right-radius:12px}
+    .chart-card .body{padding:14px 18px 18px; display:flex; align-items:center; justify-content:center}
+    .btn{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#fff;text-decoration:none;padding:10px 14px;border-radius:10px;font-weight:800}
+    .btn.danger{background:var(--danger)}
+    /* Sidebar logout button: neutral style (no red), uniform font */
+    .sidebar .btn.danger{background:transparent;color:#cbd5e1;border:1px solid rgba(255,255,255,.18);font-weight:700}
+    .sidebar .btn.danger:hover{background:rgba(255,255,255,.06);color:#fff}
+    @media(max-width:1100px){.kpis{grid-template-columns:repeat(2,1fr)}.social{grid-template-columns:repeat(2,1fr)}.charts{grid-template-columns:1fr}}
+  </style>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="avatar">A</div>
+        <div class="status"><span class="dot" aria-hidden="true"></span><span>Online</span></div>
+      </div>
+      <nav class="nav">
+        <a class="active" href="#panel=dashboard" data-target="dashboard"
+           onclick="(function(){var d=document.getElementById('panel-dashboard'),p=document.getElementById('panel-products'),c=document.getElementById('panel-categories'),ap=document.getElementById('panel-add-product'); if(d){d.style.display='';} if(p){p.style.display='none';} if(c){c.style.display='none';} if(ap){ap.style.display='none';} try{document.querySelector('.content').scrollTo({top:0,behavior:'smooth'});}catch(e){} })(); return false;">
+          <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13h8V3H3v10zM13 21h8v-8h-8v8zM13 3h8v6h-8V3zM3 21h8v-6H3v6z"/></svg></span>
+          <span>Dashboard</span>
+        </a>
+        <a href="#panel=products" data-target="products"
+           onclick="(function(){var d=document.getElementById('panel-dashboard'),p=document.getElementById('panel-products'),c=document.getElementById('panel-categories'),ap=document.getElementById('panel-add-product'); if(d){d.style.display='none';} if(c){c.style.display='none';} if(ap){ap.style.display='none';} if(p){p.style.display=''; var f=p.querySelector('iframe'); if(f){ f.src='{{ path('app_product_index') ~ '?embed=1' }}'; }} try{document.querySelector('.content').scrollTo({top:0,behavior:'smooth'});}catch(e){} })(); return false;">
+          <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.3 7L12 12l8.7-5"/></svg></span>
+          <span>Products</span>
+        </a>
+        <a href="#panel=categories" data-target="categories"
+           onclick="(function(){var d=document.getElementById('panel-dashboard'),p=document.getElementById('panel-products'),c=document.getElementById('panel-categories'),ap=document.getElementById('panel-add-product'); if(d){d.style.display='none';} if(p){p.style.display='none';} if(ap){ap.style.display='none';} if(c){c.style.display=''; var f=c.querySelector('iframe'); if(f){ f.src='{{ path('app_category_index') ~ '?embed=1' }}'; }} try{document.querySelector('.content').scrollTo({top:0,behavior:'smooth'});}catch(e){} })(); return false;">
+          <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M3 6h.01"/><path d="M3 12h.01"/><path d="M3 18h.01"/></svg></span>
+          <span>Categories</span>
+        </a>
+        {# Add Product link removed per request #}
+        <form id="logout-form" method="post" action="{{ path('app_logout') }}">
+          <input type="hidden" name="_csrf_token" value="{{ csrf_token('logout') }}">
+          <button type="submit" class="btn danger" style="margin-top:8px;width:100%;justify-content:center;gap:8px">
+            <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span>
+            <span>Sign out</span>
+          </button>
+        </form>
+      </nav>
+    </aside>
+    <main class="main">
+      <div class="content">
+        <div id="panel-dashboard">
+        {% set totalProducts = products is defined ? products|length : 0 %}
+        {# Count distinct categories using a map #}
+        {% set catMap = {} %}
+        {% if products is defined %}
+          {% for p in products %}
+            {% set key = p.category ? p.category.name : 'Uncategorized' %}
+            {% set catMap = catMap|merge({ (key): (catMap[key]|default(0) + 1) }) %}
+          {% endfor %}
+        {% endif %}
+        {% set categoriesCount = catMap|length %}
+        {# Expiring in < 7 days using unix timestamps #}
+        {% set expiring7 = 0 %}
+        {% if products is defined %}
+          {% set nowU = "now"|date('U') %}
+          {% for p in products %}
+            {% if p.expiryDate is not null %}
+              {% set days = ((p.expiryDate|date('U')) - nowU) / 86400 %}
+              {% if days >= 0 and days <= 7 %}{% set expiring7 = expiring7 + 1 %}{% endif %}
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+        {% set totalPrice = 0 %}
+        {% if products is defined %}
+          {% for p in products %}
+            {% set totalPrice = totalPrice + (p.price ?? 0) %}
+          {% endfor %}
+        {% endif %}
+        <section class="kpis">
+          <div class="card"><div class="inner" style="background:linear-gradient(135deg,#dc2626,#ef4444);color:#fff;border-radius:12px"><div style="font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase">Total Products</div><div id="kpi-total-products" style="font-size:26px;font-weight:900">{{ totalProducts }}</div></div></div>
+          <div class="card"><div class="inner" style="background:linear-gradient(135deg,#0b3c6f,#0a4c8b);color:#fff;border-radius:12px"><div style="font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase">Categories</div><div id="kpi-categories" style="font-size:26px;font-weight:900">{{ categoriesCount }}</div></div></div>
+          <div class="card"><div class="inner" style="background:linear-gradient(135deg,#38bdf8,#0ea5e9);color:#fff;border-radius:12px"><div style="font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase">Expiring &lt; 7 days</div><div id="kpi-expiring7" style="font-size:26px;font-weight:900">{{ expiring7 }}</div></div></div>
+          <div class="card"><div class="inner" style="background:linear-gradient(135deg,#0ea5e9,#0369a1);color:#fff;border-radius:12px"><div style="font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase">Total Price</div><div id="kpi-totalprice" style="font-size:26px;font-weight:900">₱{{ totalPrice }}</div></div></div>
+        </section>
+        <div class="row-two">
+          <section class="card" id="recent-products">
+            <header style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border);background:#f8fafc;border-top-left-radius:12px;border-top-right-radius:12px">
+              <div style="font-weight:800">Recent Products</div>
+              <a href="#panel=products" onclick="if(window.__activatePanel){ window.__activatePanel('products'); } return false;" style="text-decoration:none;font-weight:700;color:#007FFF">See all →</a>
+            </header>
+            <div class="body" style="padding:14px 18px 18px;height:260px">
+              <div id="recentBody" style="overflow:auto;height:100%">
+                {% if products is defined and products|length > 0 %}
+                  {% set recent = products|reverse|slice(0,5) %}
+                  <div style="border-radius:12px;overflow:hidden;border:1px solid #e5f3ff">
+                    <table style="width:100%; border-collapse:separate; border-spacing:0">
+                      <thead>
+                        <tr style="background:#f1f5f9">
+                          <th style="text-align:left;padding:10px 14px;color:#64748b;font-weight:800">Product Name</th>
+                          <th style="text-align:right;padding:10px 14px;color:#64748b;font-weight:800">Price</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for p in recent %}
+                          <tr>
+                            <td style="padding:12px 14px">{{ p.name }}</td>
+                            <td style="padding:12px 14px; text-align:right">{{ p.price|default(0) }}</td>
+                          </tr>
+                          <tr><td colspan="2" style="height:1px;background:#e5f3ff;opacity:.7"></td></tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                {% else %}
+                  <div style="color:#64748b">No products yet.</div>
+                {% endif %}
+              </div>
+            </div>
+          </section>
+          <section class="card">
+            <header style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border);background:#f8fafc;border-top-left-radius:12px;border-top-right-radius:12px">
+              <div style="font-weight:800">Price Trend</div>
+            </header>
+            <div class="body" style="height:260px"><canvas id="chartPrice" style="width:100%;height:100%"></canvas></div>
+          </section>
+        </div>
+        {# Removed social tiles section #}
+        <section class="charts">
+          <div class="card chart-card">
+            <header><div style="font-weight:800">Products per Category</div></header>
+            <div class="body" style="height:260px"><canvas id="chartByCategory" style="width:100%;height:100%"></canvas></div>
+          </div>
+          <div class="card chart-card">
+            <header><div style="font-weight:800">Expiry Status</div></header>
+            <div class="body" style="height:260px"><canvas id="chartExpiry" style="width:100%;height:100%"></canvas></div>
+          </div>
+        </section>
+        {# Price Trend moved beside Recent Products #}
+        </div>
+        <section id="panel-products" class="card" style="display:none; padding:0; overflow:hidden; height: calc(100vh - 64px - 40px);">
+          <iframe src="{{ path('app_product_index') ~ '?embed=1' }}" style="width:100%; height:100%; border:0; background:transparent"></iframe>
+        </section>
+        <section id="panel-categories" class="card" style="display:none; padding:0; overflow:hidden; height: calc(100vh - 64px - 40px);">
+          <iframe src="{{ path('app_category_index') ~ '?embed=1' }}" style="width:100%; height:100%; border:0; background:transparent"></iframe>
+        </section>
+        {# Removed Add Product panel #}
+      </div>
+    </main>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function(){
+      // Sidebar SPA switching
+      const links = document.querySelectorAll('.nav a[data-target]');
+      const nav = document.querySelector('.nav');
+      function showPanel(name){
+        const dash = document.getElementById('panel-dashboard');
+        const p = document.getElementById('panel-products');
+        const c = document.getElementById('panel-categories');
+        const ap = null;
+        if(name==='products'){
+          dash.style.display='none'; c.style.display='none'; p.style.display='';
+          const f = p.querySelector('iframe'); if(f){ const url = '{{ path('app_product_index') ~ "?embed=1" }}'; if(!f.src || !f.src.endsWith('embed=1')) f.src = url; }
+        }
+        else if(name==='categories'){
+          dash.style.display='none'; p.style.display='none'; c.style.display='';
+          const f = c.querySelector('iframe'); if(f){ const url = '{{ path('app_category_index') ~ "?embed=1" }}'; if(!f.src || !f.src.endsWith('embed=1')) f.src = url; }
+        }
+        else { dash.style.display=''; p.style.display='none'; c.style.display='none'; if(ap) ap.style.display='none'; }
+        try{ document.querySelector('.content').scrollTo({top:0, behavior:'smooth'});}catch(_){ }
+      }
+      function handleActivate(a){
+        links.forEach(x=>x.classList.remove('active'));
+        a.classList.add('active');
+        const t=a.getAttribute('data-target')||'dashboard';
+        showPanel(t);
+        try{ location.hash = '#panel='+t; }catch(_){ }
+      }
+      // Expose a global activator so inline onclick can trigger even if delegation fails
+      window.__activatePanel = function(name){
+        const a = Array.from(links).find(x=>x.getAttribute('data-target')===name);
+        if(a){ handleActivate(a); }
+      };
+      if(nav){
+        // Let anchors update hash; we just mirror activation
+        nav.addEventListener('click', function(e){
+          const a = e.target.closest('a[data-target]');
+          if(!a) return;
+          // Do not prevent default so hash updates
+          handleActivate(a);
+        });
+      }
+      // Respond to hash changes as well
+      window.addEventListener('hashchange', function(){
+        const m=/panel=([a-z\-]+)/.exec((location.hash||'').replace(/^#/,'') || '');
+        const t = m?m[1]:'dashboard';
+        const active=Array.from(links).find(a=>a.getAttribute('data-target')===t);
+        if(active){ handleActivate(active); }
+      });
+      (function(){
+        const m=/panel=([a-z\-]+)/.exec((location.hash||'').replace(/^#/,''));
+        const initial=m?m[1]:'dashboard';
+        const active=Array.from(links).find(a=>a.getAttribute('data-target')===initial);
+        if(active){ links.forEach(x=>x.classList.remove('active')); active.classList.add('active'); }
+        showPanel(initial);
+      })();
+
+      // ===========================
+      // Dashboard data population
+      // ===========================
+      // Build a single, JSON-safe products array (no trailing commas)
+      const products = [
+        {% if products is defined %}
+          {% for p in products %}
+          { id: {{ p.id }}, name: {{ p.name|json_encode|raw }}, price: {{ (p.price is defined and p.price is not null) ? p.price : '0' }}, category: {{ (p.category is defined and p.category ? p.category.name : null)|json_encode|raw }}, expiry: {{ (p.expiryDate is defined and p.expiryDate ? p.expiryDate|date('Y-m-d') : null)|json_encode|raw }} }
+          {% if not loop.last %},{% endif %}
+          {% endfor %}
+        {% endif %}
+      ];
+
+      function peso(n){ try{ return new Intl.NumberFormat('en-PH',{ style:'currency', currency:'PHP' }).format(n||0); }catch(_){ return '₱'+(n||0); } }
+      function daysUntil(dateStr){ if(!dateStr) return Infinity; const today = new Date(); today.setHours(0,0,0,0); const d=new Date(dateStr+'T00:00:00'); return Math.ceil((d - today)/86400000); }
+
+      try{
+        // KPIs
+        const elTotal = document.getElementById('kpi-total-products');
+        const elCats = document.getElementById('kpi-categories');
+        const elExp7 = document.getElementById('kpi-expiring7');
+        const elSum = document.getElementById('kpi-totalprice');
+        if(elTotal) elTotal.textContent = products.length;
+        if(elCats){ const s=new Set(products.map(p=>p.category||'Uncategorized')); elCats.textContent = s.size; }
+        if(elExp7){ const exp7 = products.filter(p=>{ const d=daysUntil(p.expiry); return d>=0 && d<=7; }).length; elExp7.textContent = exp7; }
+        if(elSum){ const total = products.reduce((a,b)=>a+(Number(b.price)||0),0); elSum.textContent = peso(total); }
+      }catch(_){ }
+      // Fallback: if Chart is not yet loaded, load it and render charts
+      try{
+        function renderAllCharts(){
+          try{
+            const byCatCtx = document.getElementById('chartByCategory');
+            if(byCatCtx && products.length){
+              const counts = {}; products.forEach(p=>{ const k=p.category||'Uncategorized'; counts[k]=(counts[k]||0)+1; });
+              const labels = Object.keys(counts); const dataVals = labels.map(l=>counts[l]);
+              // Map category -> color (case-insensitive)
+              const colors = labels.map(l=>{ const k=(l||'').toLowerCase();
+                if(k.includes('processed')) return '#8b5e3c'; /* brown */
+                if(k.includes('red')) return '#ef4444';       /* red */
+                if(k.includes('white')) return '#ffffff';     /* white */
+                if(k.includes('seafood') || k.includes('fish')) return '#0ea5e9'; /* blue */
+                return '#94a3b8';
+              });
+              const borders = labels.map(l=>{ const k=(l||'').toLowerCase(); return k.includes('white') ? '#0f172a' : '#0f172a'; });
+              if(byCatCtx._chart){ byCatCtx._chart.destroy(); }
+              byCatCtx._chart = new Chart(byCatCtx, { type:'bar', data:{ labels, datasets:[{ label:'Products', data:dataVals, backgroundColor:colors, borderColor:borders, borderWidth:1, barPercentage:0.7, categoryPercentage:0.7 }] }, options:{ responsive:true, maintainAspectRatio:false, layout:{ padding:{ left:8,right:8,top:8,bottom:8 } }, scales:{ y:{ beginAtZero:true, ticks:{ precision:0 } }, x:{ ticks:{ autoSkip:false, maxRotation:0, minRotation:0 } } }, plugins:{ legend:{ position:'top', align:'center' } } } });
+            }
+            const expCtx = document.getElementById('chartExpiry');
+            if(expCtx && products.length){
+              let expired=0, soon=0, fresh=0, nodate=0; products.forEach(p=>{ if(!p.expiry){ nodate++; return; } const d=daysUntil(p.expiry); if(d<0) expired++; else if(d<=7) soon++; else fresh++; });
+              const labels=['Expired','Expiring (<7d)','Fresh','No Date']; const values=[expired,soon,fresh,nodate];
+              if(expCtx._chart){ expCtx._chart.destroy(); }
+              expCtx._chart = new Chart(expCtx, { type:'doughnut', data:{ labels, datasets:[{ data:values, backgroundColor:['#ef4444','#f59e0b','#22c55e','#94a3b8'] }] }, options:{ responsive:true, maintainAspectRatio:false, cutout:'60%', layout:{ padding:{ left:8,right:8,top:8,bottom:8 } }, plugins:{ legend:{ position:'bottom', align:'center', labels:{ boxWidth:14, padding:14 } } } } });
+            }
+            const priceCtx = document.getElementById('chartPrice');
+            if(priceCtx && products.length){
+              const labels = products.map(p=>p.name); const values = products.map(p=>Number(p.price)||0);
+              if(priceCtx._chart){ priceCtx._chart.destroy(); }
+              priceCtx._chart = new Chart(priceCtx, { type:'line', data:{ labels, datasets:[{ label:'Price', data:values, borderColor:'#0ea5e9', backgroundColor:'#0ea5e933', tension:.25, fill:true, pointRadius:2, pointHoverRadius:4 }] }, options:{ responsive:true, maintainAspectRatio:false, layout:{ padding:{ left:8,right:8,top:8,bottom:8 } }, scales:{ y:{ beginAtZero:true } }, plugins:{ legend:{ position:'top', align:'center' } } } });
+            }
+          }catch(_){ }
+        }
+        if(!window.Chart){
+          var s=document.createElement('script');
+          s.src='https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js';
+          s.onload=function(){ renderAllCharts(); };
+          document.head.appendChild(s);
+        } else {
+          // If Chart exists but charts didn't render for some reason, render now
+          renderAllCharts();
+        }
+      }catch(_){ }
+
+      // Recent Products (last 5 by id desc)
+      try{
+        const box = document.getElementById('recentBody');
+        if(box){
+          const recent = [...products].sort((a,b)=>b.id-a.id).slice(0,5);
+          if(recent.length){
+            const rows = recent.map(p=>`<tr>
+                <td style=\"padding:12px 14px\">${p.name}</td>
+                <td style=\"padding:12px 14px; text-align:right\">${(Number(p.price)||0)}</td>
+              </tr>
+              <tr><td colspan=\"2\" style=\"height:1px;background:#e5f3ff;opacity:.7\"></td></tr>`).join('');
+            box.innerHTML = `
+              <div style=\"border-radius:12px;overflow:hidden;border:1px solid #e5f3ff\">
+                <table style=\"width:100%; border-collapse:separate; border-spacing:0\">
+                  <thead>
+                    <tr style=\"background:#f1f5f9\">
+                      <th style=\"text-align:left;padding:10px 14px;color:#64748b;font-weight:800\">Product Name</th>
+                      <th style=\"text-align:right;padding:10px 14px;color:#64748b;font-weight:800\">Price</th>
+                    </tr>
+                  </thead>
+                  <tbody>${rows}</tbody>
+                </table>
+              </div>`;
+          }else{
+            box.innerHTML = '<div style="color:#64748b">No products yet.</div>';
+          }
+        }
+      }catch(_){ }
+
+      // Inline Products list (first 8 by name asc)
+      try{
+        const box = document.getElementById('inlineBody');
+        if(box){
+          const list = [...products].sort((a,b)=>a.name.localeCompare(b.name)).slice(0,8);
+          if(list.length){
+            const rows = list.map(p=>`<tr><td style="padding:8px 10px">${p.name}</td><td style="padding:8px 10px">${p.category||'Uncategorized'}</td><td style="padding:8px 10px; text-align:right">${peso(p.price)}</td></tr>`).join('');
+            box.innerHTML = `<table style="width:100%; border-collapse:collapse"><thead><tr><th style=\"text-align:left;padding:8px 10px;color:#64748b;font-weight:800\">Name</th><th style=\"text-align:left;padding:8px 10px;color:#64748b;font-weight:800\">Category</th><th style=\"text-align:right;padding:8px 10px;color:#64748b;font-weight:800\">Price</th></tr></thead><tbody>${rows}</tbody></table>`;
+          }else{
+            box.innerHTML = '<div style="color:#64748b">No products yet.</div>';
+          }
+        }
+      }catch(_){ }
+
+      // ===========================
+      // Charts (Chart.js)
+      // ===========================
+      try{
+        const byCatCtx = document.getElementById('chartByCategory');
+        if(byCatCtx && products.length){
+          const counts = {};
+          products.forEach(p=>{ const k=p.category||'Uncategorized'; counts[k]=(counts[k]||0)+1; });
+          const labels = Object.keys(counts);
+          const dataVals = labels.map(l=>counts[l]);
+          // Destroy previous instance if any
+          if(byCatCtx._chart){ byCatCtx._chart.destroy(); }
+          byCatCtx._chart = new Chart(byCatCtx, {
+            type: 'bar',
+            data: { labels, datasets: [{ label: 'Products', data: dataVals, backgroundColor: ['#0ea5e9','#22c55e','#f59e0b','#ef4444','#8b5cf6','#14b8a6'], borderColor: '#0f172a', borderWidth: 1 }] },
+            options: { responsive: true, scales: { y: { beginAtZero: true, ticks: { precision:0 } } }, plugins: { legend: { display: true } } }
+          });
+        }
+      }catch(_){ }
+
+      try{
+        const expCtx = document.getElementById('chartExpiry');
+        if(expCtx && products.length){
+          let expired=0, soon=0, fresh=0, nodate=0;
+          products.forEach(p=>{ if(!p.expiry){ nodate++; return; } const d=daysUntil(p.expiry); if(d<0) expired++; else if(d<=7) soon++; else fresh++; });
+          const labels=['Expired','Expiring (<7d)','Fresh','No Date'];
+          const values=[expired,soon,fresh,nodate];
+          if(expCtx._chart){ expCtx._chart.destroy(); }
+          expCtx._chart = new Chart(expCtx, {
+            type: 'doughnut',
+            data: { labels, datasets:[{ data: values, backgroundColor:['#ef4444','#f59e0b','#22c55e','#94a3b8'], borderColor:'#0f172a33' }] },
+            options: { responsive:true, plugins:{ legend:{ position:'bottom' } } }
+          });
+        }
+      }catch(_){ }
+
+      try{
+        const priceCtx = document.getElementById('chartPrice');
+        if(priceCtx && products.length){
+          const labels = products.map(p=>p.name);
+          const values = products.map(p=>Number(p.price)||0);
+          if(priceCtx._chart){ priceCtx._chart.destroy(); }
+          priceCtx._chart = new Chart(priceCtx, {
+            type: 'line',
+            data: { labels, datasets:[{ label:'Price', data: values, borderColor:'#0ea5e9', backgroundColor:'#0ea5e933', tension:.25, fill:true }] },
+            options: { responsive:true, scales:{ y:{ beginAtZero:true } }, plugins:{ legend:{ display:true } } }
+          });
+        }
+      }catch(_){ }
+      // Force redirect to login after logout form submit
+      try{
+        const f = document.getElementById('logout-form');
+        if(f){ f.addEventListener('submit', function(){ setTimeout(function(){ window.location.href='{{ path('app_login') }}'; }, 50); }); }
+      }catch(_){ }
+    });
+  </script>
+{% endblock %}
+
+

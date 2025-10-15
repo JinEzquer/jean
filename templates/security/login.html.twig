@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Login · Patrick's Cold Cuts{% endblock %}
+
+{% block body %}
+<style>
+  :root{--accent:#005F99;--accent2:#00BFFF;--danger:#D72638;--border:#e5e7eb;--card:#fff;--bg:linear-gradient(135deg,#f0f9ff,#e6f7ff)}
+  body{margin:0}
+  .shell{min-height:100vh;display:grid;place-items:center;background:var(--bg);}
+  .card{width:100%;max-width:460px;background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.06);overflow:hidden}
+  .head{display:flex;align-items:center;gap:10px;padding:18px;border-bottom:1px solid var(--border);background:#fff}
+  .logo{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:#e6f3ff;overflow:hidden}
+  .title{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:.03em;color:var(--accent)}
+  .body{padding:20px}
+  .field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+  label{font-weight:700;color:#334155;font-size:12px}
+  input[type=email],input[type=password]{border:2px solid var(--border);border-radius:10px;padding:12px 14px;font-family:'Arimo',sans-serif;font-size:14px;outline:none}
+  input[type=email]:focus,input[type=password]:focus{border-color:var(--accent2);box-shadow:0 0 0 3px rgba(0,191,255,.15)}
+  .row{display:flex;align-items:center;justify-content:space-between;margin:8px 0 18px}
+  .remember{display:flex;align-items:center;gap:8px;color:#334155;font-size:13px}
+  .btn{display:inline-flex;align-items:center;justify-content:center;width:100%;gap:8px;background:#D72638;color:#fff;border:none;border-radius:10px;padding:12px 16px;font-weight:800;cursor:pointer;transition:.2s}
+  .btn:hover{filter:brightness(.95);transform:translateY(-1px);box-shadow:0 6px 14px rgba(215,38,56,.25)}
+  .alert{background:#fee2e2;color:#991b1b;border:1px solid #fecaca;padding:10px 12px;border-radius:10px;margin-bottom:12px}
+  .muted{color:#64748b;font-size:12px;margin-top:8px}
+  .link{color:var(--accent);text-decoration:none;font-weight:700}
+  .footer{border-top:1px solid var(--border);background:#fafafa;padding:12px 18px;color:#64748b;font-size:12px}
+</style>
+
+<div class="shell">
+  <div class="card">
+    <div class="head">
+      <div class="logo"><img src="{{ asset('images/logo.png') }}" alt="Logo" style="width:100%;height:100%;object-fit:contain"></div>
+      <div class="title">Login</div>
+    </div>
+    <div class="body">
+      {% if error %}
+        <div class="alert">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+      {% endif %}
+
+      {% if app.user %}
+        <div class="muted">You are logged in as <strong>{{ app.user.userIdentifier }}</strong>. <a class="link" href="{{ path('app_logout') }}">Logout</a></div>
+      {% endif %}
+
+      <form method="post">
+        <div class="field">
+          <label for="inputEmail">Email</label>
+          <input type="email" value="{{ last_username }}" name="email" id="inputEmail" autocomplete="email" required autofocus>
+        </div>
+        <div class="field">
+          <label for="inputPassword">Password</label>
+          <input type="password" name="password" id="inputPassword" autocomplete="current-password" required>
+        </div>
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+        <div class="row">
+          <label class="remember"><input type="checkbox" name="_remember_me"> Remember me</label>
+          <span class="muted">Secure area</span>
+        </div>
+
+        <button class="btn" type="submit">Sign in</button>
+      </form>
+    </div>
+    <div class="footer">© Patrick's Cold Cuts</div>
+  </div>
+</div>
+{% endblock %}
+
