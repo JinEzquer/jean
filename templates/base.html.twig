@@ -1,18 +1,718 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}
-            {{ encore_entry_link_tags('app') }}
-        {% endblock %}
-        {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
-        {% endblock %}
-    </head>
-    <body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Patrick's Cold Cuts - Premium Quality Meats{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+        <style>
+            :root {
+                --primary: #2563eb;
+                --primary-dark: #1d4ed8;
+                --primary-light: #3b82f6;
+                --secondary: #7c3aed;
+                --accent: #f59e0b;
+                --success: #10b981;
+                --danger: #ef4444;
+                --warning: #f59e0b;
+                --dark: #0f172a;
+                --light: #f8fafc;
+                --gray-50: #f8fafc;
+                --gray-100: #f1f5f9;
+                --gray-200: #e2e8f0;
+                --gray-300: #cbd5e1;
+                --gray-400: #94a3b8;
+                --gray-500: #64748b;
+                --gray-600: #475569;
+                --gray-700: #334155;
+                --gray-800: #1e293b;
+                --gray-900: #0f172a;
+            }
+            
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            
+            body {
+                font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+                line-height: 1.6;
+                color: #333333;
+                background: #ffffff;
+                margin: 0;
+                padding: 0;
+                font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+            }
+            
+            .container {
+                width: 100%;
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 0 1rem;
+            }
+            
+            /* Navigation */
+            .navbar {
+                background: #ffffff;
+                border-bottom: 2px solid #e5e5e5;
+                padding: 1rem 0;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 1000;
+                width: 100%;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+                height: 80px;
+                display: flex;
+                align-items: center;
+            }
+            
+            .nav-link {
+                color: #1a1a1a;
+                text-decoration: none;
+                font-weight: 600;
+                padding: 0.75rem 1.25rem;
+                border-radius: 8px;
+                transition: all 0.3s ease;
+                font-size: 0.95rem;
+                position: relative;
+                overflow: hidden;
+            }
+            
+            .nav-link::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.1), transparent);
+                transition: left 0.5s ease;
+            }
+            
+            .nav-link:hover::before {
+                left: 100%;
+            }
+            
+            .nav-link:hover, .nav-link.active {
+                color: #2563eb;
+                background: rgba(37, 99, 235, 0.08);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+            }
+            
+            .nav-container {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                max-width: 1400px;
+                margin: 0 auto;
+                padding: 0 2rem;
+                height: 100%;
+            }
+            
+            .nav-left {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                margin-right: auto;
+                margin-left: -1rem;
+            }
+            
+            .nav-right {
+                display: flex;
+                align-items: center;
+                gap: 1.5rem;
+            }
+            
+            .login-btn {
+                color: #1a1a1a;
+                text-decoration: none;
+                font-weight: 600;
+                padding: 0.75rem 1.5rem;
+                border: 2px solid #e5e5e5;
+                border-radius: 8px;
+                transition: all 0.3s ease;
+                font-size: 0.95rem;
+                background: #ffffff;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            }
+            
+            .login-btn:hover {
+                background: #2563eb;
+                border-color: #2563eb;
+                color: #ffffff;
+                transform: translateY(-2px);
+                box-shadow: 0 6px 16px rgba(37, 99, 235, 0.25);
+            }
+            
+            .nav-container {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                max-width: 1400px;
+                margin: 0 auto;
+                padding: 0 2rem;
+            }
+            
+            .logo {
+                color: #1a1a1a;
+                font-size: 1.6rem;
+                font-weight: 700;
+                text-decoration: none;
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                font-family: 'Inter', sans-serif;
+            }
+            
+            .logo img {
+                height: 70px;
+                width: auto;
+                filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+                border-radius: 50%;
+                object-fit: contain;
+                transition: transform 0.3s ease;
+                background: white;
+                padding: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            }
+            
+            .logo img:hover {
+                transform: scale(1.1);
+            }
+            
+            .nav-links {
+                display: flex;
+                gap: 1.5rem;
+                margin: 0;
+                padding: 0;
+                list-style: none;
+                align-items: center;
+            }
+            
+            .nav-links {
+                display: flex;
+                align-items: center;
+                gap: 1.5rem;
+            }
+            
+            .nav-links a {
+                color: white;
+                text-decoration: none;
+                font-weight: 500;
+                font-size: 0.9rem;
+                transition: all 0.2s;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                padding: 0.4rem 0;
+                position: relative;
+            }
+            
+            .nav-links a::after {
+                content: '';
+                position: absolute;
+                width: 0;
+                height: 2px;
+                bottom: 0;
+                left: 0;
+                background-color: white;
+                transition: width 0.3s ease;
+            }
+            
+            .nav-links a:hover::after,
+            .nav-links a.active::after {
+                width: 100%;
+            }
+            
+            .nav-links a:hover {
+                opacity: 0.8;
+            }
+            
+            .nav-links a:hover {
+                color: white;
+            }
+            
+            /* Search bar */
+            .search-bar {
+                display: flex;
+                align-items: center;
+                background: #f8f9fa;
+                border: 2px solid #e5e5e5;
+                border-radius: 8px;
+                padding: 0.5rem 1rem;
+                transition: all 0.3s ease;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            }
+            
+            .search-bar:focus-within {
+                background: #ffffff;
+                border-color: #2563eb;
+                box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+            }
+            
+            .search-bar input {
+                background: transparent;
+                border: none;
+                color: #1a1a1a;
+                padding: 0.3rem;
+                width: 220px;
+                outline: none;
+                font-size: 0.9rem;
+                font-weight: 500;
+            }
+            
+            .search-bar input::placeholder {
+                color: #999999;
+            }
+            
+            .search-bar button {
+                background: none;
+                border: none;
+                color: #666666;
+                cursor: pointer;
+                padding: 0.3rem;
+                font-size: 0.9rem;
+                transition: all 0.2s ease;
+            }
+            
+            .search-bar button:hover {
+                transform: scale(1.1);
+                color: #2563eb;
+            }
+            
+            /* Social Icons */
+            .social-icons {
+                display: flex;
+                gap: 1rem;
+                margin: 0 0.5rem;
+            }
+            
+            .social-icons a {
+                color: white;
+                font-size: 1.25rem;
+                opacity: 0.8;
+                transition: all 0.2s;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.1);
+            }
+            
+            .social-icons a:hover {
+                opacity: 1;
+                background: rgba(255, 255, 255, 0.2);
+                transform: translateY(-2px);
+            }
+            
+            .social-icons a:hover {
+                opacity: 1;
+            }
+            
+            .btn {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                padding: 0.5rem 1.25rem;
+                border-radius: 4px;
+                font-weight: 500;
+                text-decoration: none;
+                transition: all 0.2s;
+                border: none;
+                cursor: pointer;
+            }
+            
+            .btn-primary {
+                background-color: var(--primary);
+                color: white;
+            }
+            
+            .btn-primary:hover {
+                background-color: var(--primary-dark);
+            }
+            
+            .btn-outline {
+                background: transparent;
+                border: 1px solid white;
+                color: white;
+            }
+            
+            .btn-outline:hover {
+                background: rgba(255, 255, 255, 0.1);
+            }
+            
+            /* Hero Section */
+            .hero {
+                background: linear-gradient(rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.9)), 
+                            url('{{ asset('image/hero-bg.jpg') }}') center/cover no-repeat;
+                color: white;
+                padding: 8rem 0 6rem;
+                margin-top: 5rem;
+            }
+            
+            .hero-content {
+                max-width: 600px;
+            }
+            
+            .hero h1 {
+                font-size: 3rem;
+                font-weight: 800;
+                margin-bottom: 1.5rem;
+                line-height: 1.2;
+            }
+            
+            .hero p {
+                font-size: 1.25rem;
+                margin-bottom: 2rem;
+                opacity: 0.9;
+            }
+            
+            .btn-group {
+                display: flex;
+                gap: 1rem;
+                margin-top: 2rem;
+            }
+            
+            /* Features Section */
+            .section {
+                padding: 5rem 0;
+            }
+            
+            .section-title {
+                text-align: center;
+                margin-bottom: 3rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2.25rem;
+                color: var(--dark);
+                margin-bottom: 1rem;
+            }
+            
+            .section-title p {
+                color: #64748b;
+                max-width: 600px;
+                margin: 0 auto;
+            }
+            
+            .features-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 2rem;
+                margin-top: 3rem;
+            }
+            
+            .feature-card {
+                background: white;
+                border-radius: 0.5rem;
+                padding: 2rem;
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+                transition: transform 0.3s, box-shadow 0.3s;
+            }
+            
+            .feature-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            }
+            
+            .feature-icon {
+                width: 3rem;
+                height: 3rem;
+                background: rgba(15, 107, 220, 0.1);
+                border-radius: 0.5rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 1.5rem;
+            }
+            
+            .feature-icon svg {
+                width: 1.5rem;
+                height: 1.5rem;
+                color: var(--primary);
+            }
+            
+            .feature-card h3 {
+                font-size: 1.25rem;
+                margin-bottom: 0.75rem;
+                color: var(--dark);
+            }
+            
+            .feature-card p {
+                color: #64748b;
+                margin-bottom: 1.5rem;
+            }
+            
+            /* Footer */
+            footer {
+                background: #ffffff;
+                color: #333333;
+                padding: 2rem 0 1rem;
+                margin-top: 4rem;
+                border-top: 1px solid #e5e5e5;
+            }
+            
+            .footer-content {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 2rem;
+                margin-bottom: 2rem;
+            }
+            
+            .footer-column h3 {
+                font-size: 1.125rem;
+                margin-bottom: 1rem;
+                font-weight: 600;
+                color: #333333;
+                font-family: 'Inter', sans-serif;
+            }
+            
+            .footer-column p {
+                font-size: 0.9rem;
+                line-height: 1.6;
+                color: #666666;
+            }
+            
+            .footer-links {
+                list-style: none;
+            }
+            
+            .footer-links li {
+                margin-bottom: 0.5rem;
+            }
+            
+            .footer-links a {
+                color: #666666;
+                text-decoration: none;
+                transition: all 0.3s ease;
+                font-size: 0.9rem;
+                position: relative;
+            }
+            
+            .footer-links a::before {
+                content: '';
+                position: absolute;
+                bottom: -2px;
+                left: 0;
+                width: 0;
+                height: 2px;
+                background: #2563eb;
+                transition: width 0.3s ease;
+            }
+            
+            .footer-links a:hover {
+                color: #2563eb;
+            }
+            
+            .footer-links a:hover::before {
+                width: 100%;
+            }
+            
+            .footer-bottom {
+                border-top: 1px solid #e5e5e5;
+                padding-top: 1.5rem;
+                text-align: center;
+                color: #999999;
+                font-size: 0.85rem;
+            }
+            
+            /* Responsive */
+            @media (max-width: 768px) {
+                .navbar {
+                    height: auto;
+                    padding: 1rem 0;
+                    background-color: #0A1128 !important; /* Consistent dark blue on mobile */
+                }
+                
+                .nav-container {
+                    flex-direction: column;
+                    gap: 1rem;
+                    padding: 0 1rem;
+                }
+                
+                .nav-left, .nav-right {
+                    width: 100%;
+                    justify-content: center;
+                    margin: 0;
+                }
+                
+                .nav-links {
+                    flex-wrap: wrap;
+                    justify-content: center;
+                    gap: 1rem;
+                }
+                
+                .search-bar {
+                    width: 100%;
+                    max-width: 300px;
+                }
+                
+                .logo {
+                    font-size: 1.2rem;
+                }
+                
+                .logo img {
+                    height: 50px;
+                    width: auto;
+                    border-radius: 50%;
+                    object-fit: contain;
+                }
+                
+                main {
+                    margin-top: 120px;
+                }
+                
+                .hero {
+                    padding: 6rem 0 4rem;
+                    text-align: center;
+                }
+                
+                .hero h1 {
+                    font-size: 2.25rem;
+                }
+                
+                .btn-group {
+                    justify-content: center;
+                }
+                
+                footer {
+                    margin-top: 2rem;
+                }
+            }
+        </style>
+    {% endblock %}
+</head>
+<body>
+    <style>
+        /* Force navbar color consistency across all pages */
+        nav.navbar {
+            background: #ffffff !important;
+            border-bottom: 2px solid #e5e5e5 !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
+        }
+        .nav-link {
+            color: #1a1a1a !important;
+            font-weight: 600 !important;
+        }
+        .logo {
+            color: #1a1a1a !important;
+        }
+        .login-btn {
+            color: #1a1a1a !important;
+            background: #ffffff !important;
+            border-color: #e5e5e5 !important;
+        }
+        .search-bar {
+            background: #f8f9fa !important;
+            border-color: #e5e5e5 !important;
+        }
+        .search-bar input {
+            color: #1a1a1a !important;
+        }
+    </style>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-left">
+                <a href="{{ path('app_home') }}" class="logo" style="display: flex; align-items: center; text-decoration: none;">
+                    <div style="background: white; border-radius: 50%; padding: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: inline-flex; align-items: center; justify-content: center;">
+                        <img src="{{ asset('image/76468012-d5ef-4a7e-b2d5-d68451667914-removebg-preview.png') }}" alt="Patrick's Cold Cuts" style="height: 75px; width: auto; border-radius: 50%; object-fit: contain; transition: transform 0.3s ease;">
+                    </div>
+                    <span style="color: #1a1a1a; font-size: 1.6rem; font-weight: 700;">Patrick's Cold Cuts</span>
+                </a>
+            </div>
+            
+            <div class="nav-right">
+                <ul class="nav-menu" style="display: flex; list-style: none; gap: 1.5rem; margin: 0; padding: 0;">
+                    <li><a href="{{ path('app_home') }}" class="nav-link {{ app.request.get('_route') == 'app_home' ? 'active' : '' }}">Home</a></li>
+                    <li><a href="{{ path('app_product_index') }}" class="nav-link">Products</a></li>
+                    <li><a href="{{ path('app_home') }}#about" class="nav-link">About</a></li>
+                    <li><a href="{{ path('app_services') }}" class="nav-link">Services</a></li>
+                    <li><a href="{{ path('app_home') }}#contact" class="nav-link">Contact</a></li>
+                </ul>
+                
+                <div class="search-container" style="margin-left: 1.5rem;">
+                    <form class="search-box" action="#" method="get" style="display: flex; align-items: center;">
+                        <input type="text" name="q" placeholder="Search products..." class="search-input" style="padding: 0.5rem; border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 4px; background: rgba(255, 255, 255, 0.1); color: white; margin-right: 0.5rem;">
+                        <button type="submit" class="search-btn" style="background: none; border: none; color: white; cursor: pointer;">🔍</button>
+                    </form>
+                </div>
+                {% if app.user %}
+                    <a href="{{ path('app_logout') }}" class="login-btn" style="margin-left: 1rem;">Logout</a>
+                {% else %}
+                    <a href="{{ path('app_login') }}" class="login-btn" style="margin-left: 1rem;">Login</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    <div class="flash-messages" style="position: fixed; top: 90px; right: 20px; z-index: 1000; max-width: 400px;">
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert" 
+                     style="background: #0d6efd; color: white; padding: 1rem; margin-bottom: 0.5rem; border-radius: 4px; display: flex; justify-content: space-between; align-items: center;">
+                    {{ message|trans }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close" 
+                            style="background: none; border: none; color: white; font-size: 1.25rem; cursor: pointer;">
+                        &times;
+                    </button>
+                </div>
+            {% endfor %}
+        {% endfor %}
+    </div>
+
+    <!-- Main Content -->
+    <main style="margin-top: 100px; background: #ffffff; min-height: calc(100vh - 100px);">
         {% block body %}{% endblock %}
-    </body>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Patrick's Cold Cuts</h3>
+                    <p>Premium quality meats and deli products for all your culinary needs.</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="{{ path('app_home') }}">Home</a></li>
+                        <li><a href="{{ path('app_product_index') }}">Products</a></li>
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Contact Us</h3>
+                    <ul class="footer-links">
+                        <li>123 Deli Street</li>
+                        <li>Foodie City, FC 12345</li>
+                        <li>Phone: (123) 456-7890</li>
+                        <li>Email: info@patrickcoldcuts.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; {{ "now"|date("Y") }} Patrick's Cold Cuts. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+    {% endblock %}
+</body>
 </html>
 
 

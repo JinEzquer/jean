@@ -39,6 +39,9 @@
                         'brand-dark': '#005F99',
                     }
                 }
+            }
+        }
+    </script>
 {% endblock %}
 
 {% block body %}
@@ -46,7 +49,9 @@
   <h1 class="title">Add Product</h1>
   <div class="card">
     {% set embed = app.request.query.get('embed') == '1' %}
+    {% set admin = app.request.query.get('admin') == '1' %}
     {% set q = embed ? {'embed': 1} : {} %}
+    {% if admin %}{% set q = q|merge({'admin': 1}) %}{% endif %}
     {{ form_start(form, {'attr': {'class': 'form'}, 'action': path('app_product_new', q) }) }}
       <div class="form-grid">
         <label for="{{ form.name.vars.id }}">Product name</label>
@@ -74,7 +79,11 @@
         </div>
       </div>
       <div class="actions">
-        <a class="link" href="{{ path('app_product_index', q) }}">Back to list</a>
+        {% if admin %}
+          <a class="link" href="{{ path('app_admin_products') }}">Back to list</a>
+        {% else %}
+          <a class="link" href="{{ path('app_product_index', q) }}">Back to list</a>
+        {% endif %}
         <button class="btn" type="submit">Create Product</button>
       </div>
     {{ form_end(form) }}

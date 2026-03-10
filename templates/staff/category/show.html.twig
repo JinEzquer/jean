@@ -1,0 +1,261 @@
+{% extends 'staff/base.html.twig' %}
+
+{% block staff_content %}
+<style>
+    .detail-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 32px;
+    }
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #64748b;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.875rem;
+        transition: color 0.2s;
+    }
+    .back-link:hover {
+        color: #3b82f6;
+    }
+    .detail-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin: 0;
+    }
+    .category-content-wrapper {
+        display: grid;
+        grid-template-columns: 400px 1fr;
+        gap: 32px;
+        margin-bottom: 32px;
+        align-items: stretch;
+    }
+    .category-image-container {
+        display: flex;
+        align-items: stretch;
+    }
+    .category-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        border: 4px solid white;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .category-image:hover {
+        transform: scale(1.02);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+    }
+    .detail-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 32px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+    @media (max-width: 968px) {
+        .category-content-wrapper {
+            grid-template-columns: 1fr;
+            align-items: start;
+        }
+        .category-image-container {
+            display: flex;
+            justify-content: center;
+        }
+        .category-image {
+            max-width: 400px;
+            height: auto;
+            max-height: 400px;
+        }
+        .detail-card {
+            height: auto;
+        }
+    }
+    .detail-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 24px;
+        margin-bottom: 32px;
+    }
+    .detail-item {
+        padding: 24px;
+        background: linear-gradient(135deg, #f5f5f0 0%, #f0f0eb 100%);
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .detail-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    .detail-item.full-width {
+        grid-column: 1 / -1;
+    }
+    .detail-label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .detail-value {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #1e293b;
+        line-height: 1.4;
+    }
+    .detail-description {
+        font-size: 1rem;
+        color: #475569;
+        line-height: 1.7;
+        padding: 16px;
+        background: white;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
+        margin-top: 8px;
+    }
+    .detail-actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 32px;
+        padding-top: 24px;
+        border-top: 2px solid #f1f5f9;
+        justify-content: flex-end;
+    }
+    .btn-secondary {
+        background: #f5f5f0;
+        color: #475569;
+        border: 2px solid #e2e8f0;
+        padding: 12px 24px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.2s;
+    }
+    .btn-secondary:hover {
+        background: #f0f0eb;
+        border-color: #cbd5e1;
+        transform: translateY(-1px);
+    }
+    .btn-primary {
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
+        transition: all 0.2s;
+    }
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px -1px rgba(59, 130, 246, 0.4);
+    }
+</style>
+
+<div style="padding: 24px; width: 100%; box-sizing: border-box;">
+    <div class="detail-header" style="margin-bottom: 24px;">
+        <a href="{{ path('staff_category_index') }}" class="back-link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            Back to Categories
+        </a>
+    </div>
+    <h1 class="detail-title" style="margin-bottom: 32px;">Category Details</h1>
+
+    {# Category image preview #}
+    {% set n = category.name|lower %}
+    {% if 'white' in n %}
+        {% set img = 'image/whitemeat.jpg' %}
+    {% elseif 'seafood' in n %}
+        {% set img = 'image/seafoods.jpg' %}
+    {% elseif 'red' in n %}
+        {% set img = 'image/redmeat.jpg' %}
+    {% elseif 'processed' in n %}
+        {% set img = 'image/processed meats.jpg' %}
+    {% else %}
+        {% set img = null %}
+    {% endif %}
+
+    <div class="category-content-wrapper">
+        {% if img %}
+            <div class="category-image-container">
+                <img src="{{ asset(img) }}" alt="{{ category.name }}" class="category-image">
+            </div>
+        {% endif %}
+
+        <div class="detail-card">
+        <div class="detail-grid">
+            <div class="detail-item">
+                <div class="detail-label">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                    </svg>
+                    Category ID
+                </div>
+                <div class="detail-value">#{{ category.id }}</div>
+            </div>
+            <div class="detail-item">
+                <div class="detail-label">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+                    </svg>
+                    Category Name
+                </div>
+                <div class="detail-value">{{ category.name }}</div>
+            </div>
+            <div class="detail-item full-width">
+                <div class="detail-label">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10 9 9 9 8 9"></polyline>
+                    </svg>
+                    Description
+                </div>
+                <div class="detail-description">{{ category.description ?: 'No description provided for this category.' }}</div>
+            </div>
+        </div>
+
+        <div class="detail-actions">
+            <a href="{{ path('staff_category_index') }}" class="btn-secondary">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Back to List
+            </a>
+            <a href="{{ path('staff_category_edit', {id: category.id}) }}" class="btn-primary">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+                Edit Category
+            </a>
+        </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

@@ -6,10 +6,12 @@ use App\Entity\Product;
 use App\Entity\Category;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
 
 class ProductType extends AbstractType
 {
@@ -34,6 +36,20 @@ class ProductType extends AbstractType
                 'choice_label' => 'name',
                 'placeholder' => 'Select category',
                 'required' => false,
+            ])
+            ->add('imageFile', FileType::class, [
+                'label' => 'Product Image',
+                'required' => false,
+                'mapped' => false,
+                'constraints' => [
+                    new File([
+                        'maxSize' => '5M',
+                        'maxSizeMessage' => 'The file is too large. Maximum size is 5MB.',
+                    ])
+                ],
+                'attr' => [
+                    'accept' => 'image/*',
+                ],
             ])
         ;
     }

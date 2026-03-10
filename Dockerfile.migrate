@@ -1,0 +1,6 @@
+# Minimal image to run doctrine:migrations:migrate inside Docker network (connects to host "database")
+FROM php:8.2-cli
+
+RUN docker-php-ext-install -j$(nproc) pdo_mysql
+
+WORKDIR /app

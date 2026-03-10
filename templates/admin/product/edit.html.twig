@@ -1,0 +1,54 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block admin_content %}
+<div style="padding: 20px;">
+    <div style="margin-bottom: 24px;">
+        <a href="{{ path('app_admin_products') }}" style="color: #3b82f6; text-decoration: none; font-weight: 500; margin-bottom: 16px; display: inline-block;">
+            ← Back to Products
+        </a>
+        <h1 style="font-size: 2rem; font-weight: 700; color: #1e293b; margin-top: 8px;">Edit Product</h1>
+    </div>
+
+    <div style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; max-width: 800px;">
+        {{ form_start(productForm, {'attr': {'style': 'display: flex; flex-direction: column; gap: 20px;'}}) }}
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div style="grid-column: 1 / -1;">
+                {{ form_label(productForm.name, null, {'label_attr': {'style': 'display: block; margin-bottom: 8px; font-weight: 500; color: #475569;'}}) }}
+                {{ form_widget(productForm.name, {'attr': {'style': 'width: 100%; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 1rem;', 'placeholder': 'Enter product name'}}) }}
+                {{ form_errors(productForm.name) }}
+            </div>
+
+            <div>
+                {{ form_label(productForm.category, null, {'label_attr': {'style': 'display: block; margin-bottom: 8px; font-weight: 500; color: #475569;'}}) }}
+                {{ form_widget(productForm.category, {'attr': {'style': 'width: 100%; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 1rem;'}}) }}
+                {{ form_errors(productForm.category) }}
+            </div>
+
+            <div>
+                {{ form_label(productForm.price, null, {'label_attr': {'style': 'display: block; margin-bottom: 8px; font-weight: 500; color: #475569;'}}) }}
+                {{ form_widget(productForm.price, {'attr': {'style': 'width: 100%; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 1rem;', 'placeholder': '0.00', 'step': '0.01'}}) }}
+                {{ form_errors(productForm.price) }}
+            </div>
+
+            <div style="grid-column: 1 / -1;">
+                {{ form_label(productForm.expiryDate, null, {'label_attr': {'style': 'display: block; margin-bottom: 8px; font-weight: 500; color: #475569;'}}) }}
+                {{ form_widget(productForm.expiryDate, {'attr': {'style': 'width: 100%; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 1rem;'}}) }}
+                {{ form_errors(productForm.expiryDate) }}
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 12px; margin-top: 8px; justify-content: flex-end;">
+            <a href="{{ path('app_admin_products') }}" style="background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 500; display: inline-block;">
+                Cancel
+            </a>
+            <button type="submit" style="background: #3b82f6; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 500; cursor: pointer;">
+                Update Product
+            </button>
+        </div>
+
+        {{ form_end(productForm) }}
+    </div>
+</div>
+{% endblock %}
+

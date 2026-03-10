@@ -1,0 +1,71 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block admin_content %}
+<div style="padding: 20px;">
+    <div style="margin-bottom: 24px;">
+        <a href="{{ path('admin_user_index') }}" style="color: #3b82f6; text-decoration: none; font-weight: 500; margin-bottom: 16px; display: inline-block;">
+            ← Back to User Management
+        </a>
+        <h1 style="font-size: 2rem; font-weight: 700; color: #1e293b; margin-top: 8px;">Edit User</h1>
+    </div>
+
+    <div style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; max-width: 600px;">
+        {{ form_start(form, {'attr': {'style': 'display: flex; flex-direction: column; gap: 20px;'}}) }}
+        
+        <div>
+            {{ form_label(form.email, null, {'label_attr': {'style': 'display: block; margin-bottom: 8px; font-weight: 500; color: #475569;'}}) }}
+            {{ form_widget(form.email, {'attr': {'style': 'width: 100%; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 1rem;'}}) }}
+            {{ form_errors(form.email) }}
+        </div>
+
+        <div>
+            {{ form_label(form.firstName, null, {'label_attr': {'style': 'display: block; margin-bottom: 8px; font-weight: 500; color: #475569;'}}) }}
+            {{ form_widget(form.firstName, {'attr': {'style': 'width: 100%; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 1rem;'}}) }}
+            {{ form_errors(form.firstName) }}
+        </div>
+
+        <div>
+            {{ form_label(form.lastName, null, {'label_attr': {'style': 'display: block; margin-bottom: 8px; font-weight: 500; color: #475569;'}}) }}
+            {{ form_widget(form.lastName, {'attr': {'style': 'width: 100%; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 1rem;'}}) }}
+            {{ form_errors(form.lastName) }}
+        </div>
+
+        {% if not is_current_user %}
+            <div>
+                {{ form_label(form.roles, null, {'label_attr': {'style': 'display: block; margin-bottom: 8px; font-weight: 500; color: #475569;'}}) }}
+                {{ form_widget(form.roles, {'attr': {'style': 'width: 100%; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 1rem;'}}) }}
+                {{ form_errors(form.roles) }}
+            </div>
+
+            <div>
+                {{ form_label(form.isActive, null, {'label_attr': {'style': 'display: block; margin-bottom: 8px; font-weight: 500; color: #475569;'}}) }}
+                {{ form_widget(form.isActive, {'attr': {'style': 'width: 20px; height: 20px;'}}) }}
+                {{ form_errors(form.isActive) }}
+            </div>
+        {% else %}
+            <div style="padding: 12px; background: #fef3c7; border: 1px solid #fbbf24; border-radius: 6px; color: #92400e;">
+                <strong>Note:</strong> You cannot change your own role or status.
+            </div>
+        {% endif %}
+
+        <div>
+            {{ form_label(form.plainPassword, null, {'label_attr': {'style': 'display: block; margin-bottom: 8px; font-weight: 500; color: #475569;'}}) }}
+            {{ form_widget(form.plainPassword, {'attr': {'style': 'width: 100%; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 1rem;'}}) }}
+            {{ form_errors(form.plainPassword) }}
+            <small style="color: #64748b; font-size: 0.875rem; margin-top: 4px; display: block;">Leave blank to keep current password</small>
+        </div>
+
+        <div style="display: flex; gap: 12px; margin-top: 8px;">
+            <button type="submit" style="background: #3b82f6; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 500; cursor: pointer;">
+                Update User
+            </button>
+            <a href="{{ path('admin_user_index') }}" style="background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 500; display: inline-block;">
+                Cancel
+            </a>
+        </div>
+
+        {{ form_end(form) }}
+    </div>
+</div>
+{% endblock %}
+

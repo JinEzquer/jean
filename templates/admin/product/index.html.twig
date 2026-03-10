@@ -1,0 +1,250 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block admin_content %}
+  <style>
+    .prod-bg { position: relative; margin: -12px -14px 0 -14px; padding: 24px; background: #f5f5f0; min-height: 100vh; box-sizing: border-box; }
+    .prod-header { display: flex; align-items: center; justify-content: flex-end; margin-bottom: 24px; }
+    .prod-header .btn { background: #ef4444; padding: 10px 18px; height: auto; font-size: 14px; }
+    .prod-header .btn:hover { background: #dc2626; }
+    .prod-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; max-width: 1280px; margin: 0 auto; }
+    .product-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(2,8,23,.08); transition: transform .2s ease, box-shadow .2s ease; display: flex; flex-direction: column; }
+    .product-card:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(2,8,23,.14); }
+    .product-card-img { width: 100%; height: 160px; object-fit: cover; background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%); display: block; }
+    .product-body { padding: 16px; display: flex; flex-direction: column; align-items: stretch; flex: 1; }
+    .product-name { font-weight: 800; font-size: 1.1rem; margin-bottom: 6px; color: #0f172a; line-height: 1.3; }
+    .product-meta { margin-bottom: 10px; }
+    .cat-tag { display: inline-block; font-size: 12px; font-weight: 600; color: #64748b; background: #f1f5f9; padding: 4px 10px; border-radius: 6px; }
+    .price-badge { display: inline-flex; align-items: center; justify-content: center; background: #0f6bdc; color: #fff; border-radius: 999px; padding: 8px 14px; font-weight: 800; font-size: 14px; margin-bottom: 12px; align-self: flex-start; }
+    .prod-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; }
+    .prod-actions form { margin: 0; }
+    .prod-actions .btn { min-width: 72px; height: 34px; font-size: 12px; }
+    .prod-actions .btn.alt { background: #0b3c6f; }
+    .prod-actions .btn.alt:hover { background: #0a2d55; }
+    .prod-actions .btn.danger { background: #dc2626; }
+    .prod-actions .btn.danger:hover { background: #b91c1c; }
+    .prod-empty { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 48px 24px; text-align: center; color: #64748b; grid-column: 1 / -1; }
+    /* Modal */
+    .prod-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); display: none; align-items: center; justify-content: center; z-index: 9999; padding: 20px; box-sizing: border-box; }
+    .prod-modal-overlay.is-open { display: flex; }
+    .prod-modal { background: #fff; border-radius: 16px; max-width: 520px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 24px 48px rgba(0,0,0,.2); }
+    .prod-modal-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px; border-bottom: 1px solid #e5e7eb; }
+    .prod-modal-title { font-size: 1.25rem; font-weight: 700; color: #0f172a; margin: 0; }
+    .prod-modal-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #64748b; padding: 0; line-height: 1; }
+    .prod-modal-close:hover { color: #0f172a; }
+    .prod-modal-body { padding: 24px; }
+    .prod-modal-body .form-group { margin-bottom: 16px; }
+    .prod-modal-body label { display: block; margin-bottom: 6px; font-weight: 500; color: #475569; font-size: 14px; }
+    .prod-modal-body input, .prod-modal-body select { width: 100%; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 1rem; box-sizing: border-box; }
+    .prod-modal-body .form-error, .prod-modal-body ul { color: #dc2626; font-size: 13px; margin-top: 4px; }
+.prod-modal-body ul { list-style: none; padding: 0; margin: 4px 0 0; }
+    .prod-modal-footer { display: flex; gap: 12px; justify-content: flex-end; padding: 16px 24px; border-top: 1px solid #e5e7eb; }
+    .prod-modal.prod-modal-lg { max-width: 700px; }
+    .prod-view-layout { display: flex; gap: 24px; }
+    .prod-view-image { flex: 1; min-width: 200px; }
+    .prod-view-image img { width: 100%; height: 280px; object-fit: cover; border-radius: 12px; }
+    .prod-view-noimg { width: 100%; height: 200px; background: #f1f5f9; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #94a3b8; font-weight: 600; }
+    .prod-view-info { flex: 1; }
+    .prod-view-name { font-size: 1.5rem; font-weight: 800; margin: 0 0 16px; color: #0f172a; }
+    .prod-view-meta { display: flex; flex-direction: column; gap: 12px; }
+    .prod-view-item { display: flex; flex-direction: column; gap: 4px; }
+    .prod-view-label { font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase; }
+    .prod-view-price { font-size: 1.5rem; font-weight: 800; color: #059669; }
+    .prod-modal-footer .btn-cancel { background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; padding: 10px 18px; border-radius: 8px; font-weight: 500; cursor: pointer; text-decoration: none; }
+    .prod-modal-footer .btn-submit { background: #0f6bdc; color: #fff; border: none; padding: 10px 18px; border-radius: 8px; font-weight: 500; cursor: pointer; }
+  </style>
+
+  <div class="prod-bg">
+    <div class="prod-header">
+      <button type="button" class="btn" id="prod-new-btn">+ New Product</button>
+    </div>
+
+    <div class="prod-grid">
+      {% for product in products %}
+        <div class="product-card">
+          {% if product.image %}
+            <img src="{{ asset(product.image) }}" alt="{{ product.name }}" class="product-card-img">
+          {% else %}
+            <div class="product-card-img" style="display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:14px;font-weight:600">No image</div>
+          {% endif %}
+          <div class="product-body">
+            <div class="product-name">{{ product.name }}</div>
+            <div class="product-meta">
+              <span class="cat-tag">{{ product.category ? product.category.name : 'Uncategorized' }}</span>
+            </div>
+            <div class="price-badge">{{ product.price is not null ? ('₱' ~ product.price) : 'Price N/A' }}</div>
+            <div class="prod-actions">
+              <button type="button" class="btn prod-view-btn" data-url="{{ path('app_admin_product_show', {id: product.id}) }}" data-title="View: {{ product.name }}">View</button>
+              <button type="button" class="btn alt prod-edit-btn" data-url="{{ path('app_admin_product_edit', {id: product.id}) }}" data-title="Edit: {{ product.name }}">Edit</button>
+              <form method="post" action="{{ path('app_product_delete', {id: product.id, admin: 1}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ product.id) }}">
+                <button class="btn danger" type="submit">Delete</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      {% else %}
+        <div class="prod-empty">No products found.</div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="prod-modal-overlay" id="prod-modal" aria-hidden="true">
+    <div class="prod-modal" role="dialog" aria-labelledby="prod-modal-title">
+      <div class="prod-modal-header">
+        <h2 class="prod-modal-title" id="prod-modal-title">Create New Product</h2>
+        <button type="button" class="prod-modal-close" id="prod-modal-close" aria-label="Close">&times;</button>
+      </div>
+      {{ form_start(productForm, {'attr': {'id': 'prod-form', 'class': 'prod-modal-form'}, 'action': path('app_admin_product_new')}) }}
+      <div class="prod-modal-body">
+        <div class="form-group">
+          {{ form_label(productForm.name) }}
+          {{ form_widget(productForm.name, {'attr': {'placeholder': 'Enter product name'}}) }}
+          {{ form_errors(productForm.name) }}
+        </div>
+        <div class="form-group">
+          {{ form_label(productForm.category) }}
+          {{ form_widget(productForm.category) }}
+          {{ form_errors(productForm.category) }}
+        </div>
+        <div class="form-group">
+          {{ form_label(productForm.price) }}
+          {{ form_widget(productForm.price, {'attr': {'placeholder': '0.00', 'step': '0.01'}}) }}
+          {{ form_errors(productForm.price) }}
+        </div>
+        <div class="form-group">
+          {{ form_label(productForm.expiryDate) }}
+          {{ form_widget(productForm.expiryDate) }}
+          {{ form_errors(productForm.expiryDate) }}
+        </div>
+        <div class="form-group">
+          {{ form_label(productForm.imageFile) }}
+          {{ form_widget(productForm.imageFile) }}
+          {{ form_errors(productForm.imageFile) }}
+        </div>
+      </div>
+      <div class="prod-modal-footer">
+        <button type="button" class="btn-cancel" id="prod-modal-cancel">Cancel</button>
+        <button type="submit" class="btn-submit">Create Product</button>
+      </div>
+      {{ form_end(productForm) }}
+    </div>
+  </div>
+
+  <div class="prod-modal-overlay" id="prod-content-modal" aria-hidden="true">
+    <div class="prod-modal prod-modal-lg" id="prod-content-modal-inner" role="dialog">
+      <div class="prod-modal-header">
+        <h2 class="prod-modal-title" id="prod-content-modal-title"></h2>
+        <button type="button" class="prod-modal-close prod-content-close" aria-label="Close">&times;</button>
+      </div>
+      <div class="prod-modal-body" id="prod-content-modal-body" style="min-height:120px"></div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      var modal = document.getElementById('prod-modal');
+      var openBtn = document.getElementById('prod-new-btn');
+      var closeBtn = document.getElementById('prod-modal-close');
+      var cancelBtn = document.getElementById('prod-modal-cancel');
+      var form = document.getElementById('prod-form');
+
+      function openModal() { modal.classList.add('is-open'); modal.setAttribute('aria-hidden', 'false'); }
+      function closeModal() { modal.classList.remove('is-open'); modal.setAttribute('aria-hidden', 'true'); }
+
+      openBtn.addEventListener('click', openModal);
+      closeBtn.addEventListener('click', closeModal);
+      cancelBtn.addEventListener('click', closeModal);
+      modal.addEventListener('click', function(e) { if (e.target === modal) closeModal(); });
+
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        var submitBtn = form.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        var fd = new FormData(form);
+        fetch(form.action, { method: 'POST', body: fd, headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+          .then(function(r) {
+            var ct = r.headers.get('content-type') || '';
+            if (ct.indexOf('application/json') !== -1) {
+              return r.json().then(function(d) {
+                if (r.ok) return d;
+                throw new Error(d.errors || 'Please check the form and try again.');
+              });
+            }
+            if (r.ok) return {};
+            throw new Error('An error occurred. Please try again.');
+          })
+          .then(function() { closeModal(); form.reset(); location.reload(); })
+          .catch(function(err) { alert(err.message || 'Something went wrong.'); submitBtn.disabled = false; });
+      });
+    })();
+
+    (function() {
+      var contentModal = document.getElementById('prod-content-modal');
+      var contentBody = document.getElementById('prod-content-modal-body');
+      var contentTitle = document.getElementById('prod-content-modal-title');
+      var contentInner = document.getElementById('prod-content-modal-inner');
+
+      function openContentModal(title, html) {
+        contentTitle.textContent = title;
+        contentBody.innerHTML = html;
+        contentModal.classList.add('is-open');
+        contentModal.setAttribute('aria-hidden', 'false');
+        var editForm = contentBody.querySelector('#prod-edit-form');
+        if (editForm) {
+          editForm.addEventListener('submit', handleEditSubmit);
+          var cancelBtn = contentBody.querySelector('.prod-edit-cancel');
+          if (cancelBtn) cancelBtn.onclick = closeContentModal;
+        }
+      }
+      function closeContentModal() {
+        contentModal.classList.remove('is-open');
+        contentModal.setAttribute('aria-hidden', 'true');
+        contentBody.innerHTML = '';
+      }
+      function handleEditSubmit(e) {
+        e.preventDefault();
+        var form = e.target;
+        var submitBtn = form.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        var fd = new FormData(form);
+        fetch(form.action, { method: 'POST', body: fd, headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+          .then(function(r) {
+            var ct = r.headers.get('content-type') || '';
+            if (ct.indexOf('application/json') !== -1) {
+              return r.json().then(function(d) {
+                if (r.ok) return d;
+                throw new Error(d.errors || 'Please check the form.');
+              });
+            }
+            if (r.ok) return {};
+            throw new Error('An error occurred.');
+          })
+          .then(function() { closeContentModal(); location.reload(); })
+          .catch(function(err) { alert(err.message); submitBtn.disabled = false; });
+      }
+
+      document.querySelectorAll('.prod-view-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var url = this.getAttribute('data-url');
+          var title = this.getAttribute('data-title') || 'Product Details';
+          fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+            .then(function(r) { return r.text(); })
+            .then(function(html) { openContentModal(title, html); })
+            .catch(function() { location.href = url; });
+        });
+      });
+      document.querySelectorAll('.prod-edit-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var url = this.getAttribute('data-url');
+          var title = this.getAttribute('data-title') || 'Edit Product';
+          fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+            .then(function(r) { return r.text(); })
+            .then(function(html) { openContentModal(title, html); })
+            .catch(function() { location.href = url; });
+        });
+      });
+      document.querySelector('.prod-content-close').addEventListener('click', closeContentModal);
+      contentModal.addEventListener('click', function(e) { if (e.target === contentModal) closeContentModal(); });
+    })();
+  </script>
+{% endblock %}

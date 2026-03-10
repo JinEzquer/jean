@@ -1,0 +1,132 @@
+{% block stylesheets %}
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8fafc;
+        }
+        .product-details {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+        .detail-item {
+            padding: 16px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border-left: 4px solid #0f6bdc;
+        }
+        .detail-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+        .detail-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+        .product-image {
+            width: 100%;
+            max-width: 300px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin: 0 auto 24px;
+            display: block;
+        }
+        .actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .btn-primary {
+            background: #0f6bdc;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #0d5cbf;
+        }
+        .btn-secondary {
+            background: #64748b;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background: #475569;
+        }
+        @media (max-width: 640px) {
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+{% endblock %}
+
+<body>
+    <div class="product-details">
+        {% if product.image %}
+            <img src="{{ asset('uploads/products/' ~ product.image) }}" alt="{{ product.name }}" class="product-image" onerror="this.onerror=null; this.src='{{ asset('image/placeholder.jpg') }}';">
+        {% endif %}
+        
+        <div class="detail-grid">
+            <div class="detail-item">
+                <div class="detail-label">Product ID</div>
+                <div class="detail-value">#{{ product.id }}</div>
+            </div>
+            
+            <div class="detail-item">
+                <div class="detail-label">Product Name</div>
+                <div class="detail-value">{{ product.name }}</div>
+            </div>
+            
+            <div class="detail-item">
+                <div class="detail-label">Category</div>
+                <div class="detail-value">{{ product.category ? product.category.name : 'Uncategorized' }}</div>
+            </div>
+            
+            <div class="detail-item">
+                <div class="detail-label">Price</div>
+                <div class="detail-value">{{ product.price is not null ? ('₱' ~ product.price|number_format(2)) : '—' }}</div>
+            </div>
+            
+            <div class="detail-item">
+                <div class="detail-label">Expiry Date</div>
+                <div class="detail-value">{{ product.expiryDate ? product.expiryDate|date('M d, Y') : '—' }}</div>
+            </div>
+            
+            {% if product.description is defined and product.description %}
+            <div class="detail-item" style="grid-column: 1 / -1;">
+                <div class="detail-label">Description</div>
+                <div class="detail-value" style="font-weight: 400; line-height: 1.6;">{{ product.description }}</div>
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="actions">
+            <button class="btn btn-secondary" onclick="parent.closeViewProduct()">Close</button>
+            {% if is_granted('ROLE_ADMIN') %}
+            <button class="btn btn-primary" onclick="parent.openEditProduct({{ product.id }})">Edit Product</button>
+            {% endif %}
+        </div>
+    </div>
+</body>

@@ -61,37 +61,11 @@
   <h1 class="title">Product Details</h1>
   <div class="card">
     {% set embed = app.request.query.get('embed') == '1' %}
+    {% set admin = app.request.query.get('admin') == '1' %}
     {% set q = embed ? {'embed': 1} : {} %}
-    {% set img = (product.imagePath is defined and product.imagePath) ? product.imagePath
-      : (product.image is defined and product.image ? product.image
-      : (product.photo is defined and product.photo ? product.photo
-      : (product.picture is defined and product.picture ? product.picture : null))) %}
-    {% if not img %}
-      {% set n = product.name|lower %}
-      {% if 'chicken' in n %}
-        {% set img = 'image/chicken.jpg' %}
-      {% elseif 'fish' in n %}
-        {% set img = 'image/fish.jpg' %}
-      {% elseif 'lobster' in n %}
-        {% set img = 'image/lobster.jpg' %}
-      {% elseif 'sausage' in n %}
-        {% set img = 'image/sausage.jpg' %}
-      {% elseif 'steak' in n %}
-        {% set img = 'image/steak.jpg' %}
-      {% elseif 'crab' in n %}
-        {% set img = 'image/crabs.jpg' %}
-      {% elseif 'mutton' in n %}
-        {% set img = 'image/mutton.jpg' %}
-      {% elseif 'pork' in n %}
-        {% set img = 'image/frozen1.jpg' %}
-      {% endif %}
-    {% endif %}
-    {% set src = img ? asset(img) : asset('image/logo.png') %}
+    {% if admin %}{% set q = q|merge({'admin': 1}) %}{% endif %}
 
     <div class="grid">
-      <div class="item" style="grid-column: 1 / -1; display:flex; justify-content:center; padding:12px 0">
-        <img class="detail-image" src="{{ src }}" alt="{{ product.name }}">
-      </div>
       <div class="item">
         <div class="label">Product ID</div>
         <div class="value">{{ product.id }}</div>
@@ -115,8 +89,13 @@
         <a class="btn light" href="#" onclick="try{ window.parent.closeViewProduct(); }catch(_){ } return false;">Back to List</a>
         <a class="btn" href="#" onclick="try{ window.parent.openEditProduct({{ product.id }}); }catch(_){ } return false;">Edit Product</a>
       {% else %}
-        <a class="btn light" href="{{ path('app_product_index') }}">Back to List</a>
-        <a class="btn" href="{{ path('app_product_edit', {id: product.id}) }}">Edit Product</a>
+        {% if admin %}
+          <a class="btn light" href="{{ path('app_admin_products') }}">Back to Admin</a>
+          <a class="btn" href="{{ path('app_product_edit', {id: product.id, admin: 1}) }}">Edit Product</a>
+        {% else %}
+          <a class="btn light" href="{{ path('app_product_index') }}">Back to List</a>
+          <a class="btn" href="{{ path('app_product_edit', {id: product.id}) }}">Edit Product</a>
+        {% endif %}
       {% endif %}
     </div>
   </div>

@@ -1,0 +1,28 @@
+<div class="prod-view-modal-content">
+  <div class="prod-view-layout">
+    <div class="prod-view-image">
+      {% if product.image %}
+        <img src="{{ asset(product.image) }}" alt="{{ product.name }}">
+      {% else %}
+        <div class="prod-view-noimg">No Image</div>
+      {% endif %}
+    </div>
+    <div class="prod-view-info">
+      <h3 class="prod-view-name">{{ product.name }}</h3>
+      <div class="prod-view-meta">
+        <div class="prod-view-item">
+          <span class="prod-view-label">Category</span>
+          <span>{{ product.category ? product.category.name : 'Uncategorized' }}</span>
+        </div>
+        <div class="prod-view-item">
+          <span class="prod-view-label">Price</span>
+          <span class="prod-view-price">{{ product.price is not null ? ('₱' ~ product.price|number_format(2, '.', ',')) : 'N/A' }}</span>
+        </div>
+        <div class="prod-view-item">
+          <span class="prod-view-label">Expiry Date</span>
+          <span>{{ product.expiryDate ? product.expiryDate|date('M d, Y') : 'Not set' }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

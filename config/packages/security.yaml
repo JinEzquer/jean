@@ -1,29 +1,95 @@
 security:
     # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
-        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+        App\Entity\User:
+            algorithm: auto
+            cost: 12
+        # Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
-        users_in_memory: { memory: null }
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email
+
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+            
+        # Main firewall for the application
         main:
             lazy: true
-            provider: users_in_memory
+            provider: app_user_provider
+            custom_authenticator: App\Security\LoginAuthenticator
+            logout:
+                path: app_logout
+                target: app_login
+                invalidate_session: true
+                delete_cookies:
+                    REMEMBERME: { path: '/', domain: null }
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 604800 # 1 week in seconds
+                path: /
+                httponly: true
+                samesite: lax
+                secure: true
 
-            # activate different ways to authenticate
-            # https://symfony.com/doc/current/security.html#the-firewall
+    # Role hierarchy
+    role_hierarchy:
+        ROLE_ADMIN:       [ROLE_STAFF, ROLE_USER]
+        ROLE_STAFF:       [ROLE_USER]
+        ROLE_USER:        []
 
-            # https://symfony.com/doc/current/security/impersonating_user.html
-            # switch_user: true
-
-    # Easy way to control access for large sections of your site
-    # Note: Only the *first* access control that matches will be used
+    # Access control rules - order matters (first match wins)
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        # Public assets
+        - { path: ^/build, roles: PUBLIC_ACCESS }
+        - { path: ^/css, roles: PUBLIC_ACCESS }
+        - { path: ^/js, roles: PUBLIC_ACCESS }
+        - { path: ^/images, roles: PUBLIC_ACCESS }
+        - { path: ^/favicon.ico, roles: PUBLIC_ACCESS }
+        - { path: ^/uploads, roles: PUBLIC_ACCESS }
+        
+        # Authentication
+        - { path: ^/login$, roles: PUBLIC_ACCESS }
+        - { path: ^/register, roles: PUBLIC_ACCESS }
+        - { path: ^/resetting, roles: PUBLIC_ACCESS }
+        - { path: ^/logout, roles: PUBLIC_ACCESS }
+        - { path: ^/public, roles: PUBLIC_ACCESS }
+        
+        # Admin area (strict access) - require full authentication
+        - { path: ^/admin, roles: ROLE_ADMIN, requires_channel: null }
+        - { path: ^/admin/products, roles: ROLE_ADMIN, requires_channel: null }
+        - { path: ^/admin/categories, roles: ROLE_ADMIN, requires_channel: null }
+        - { path: ^/admin/users, roles: ROLE_ADMIN, requires_channel: null }
+        - { path: ^/admin/activity-logs, roles: ROLE_ADMIN, requires_channel: null }
+        - { path: ^/api/admin, roles: ROLE_ADMIN, requires_channel: null }
+        
+        # Staff area
+        - { path: ^/staff, roles: ROLE_STAFF }
+        - { path: ^/api/staff, roles: ROLE_STAFF }
+        
+        # Product routes - staff can access, but restrictions are in controllers
+        - { path: ^/product/new, roles: ROLE_STAFF }
+        - { path: ^/product/\d+/edit, roles: ROLE_STAFF }
+        - { path: ^/product/\d+$, roles: ROLE_STAFF, methods: [POST] }
+        
+        # User area
+        - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/dashboard, roles: ROLE_USER }
+        - { path: ^/home, roles: ROLE_USER }
+        
+        # API endpoints
+        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
+        
+        # Homepage
+        - { path: ^/$, roles: PUBLIC_ACCESS }
+        
+        # Default security - require authentication for everything else
+        - { path: ^/, roles: ROLE_USER }
 
 when@test:
     security:

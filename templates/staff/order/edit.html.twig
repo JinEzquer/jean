@@ -1,0 +1,174 @@
+{% extends 'staff/base.html.twig' %}
+
+{% block staff_content %}
+<div style="padding: 20px;">
+    <div style="margin-bottom: 24px;">
+        <a href="{{ path('staff_order_show', {id: order.id}) }}" style="color: #3b82f6; text-decoration: none; font-weight: 500; margin-bottom: 16px; display: inline-block;">
+            ← Back to Order Details
+        </a>
+        <h1 style="font-size: 2rem; font-weight: 700; color: #1e293b; margin-top: 8px;">Edit Order #{{ order.id }}</h1>
+    </div>
+
+    <div style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; max-width: 900px;">
+        {{ form_start(orderForm, {'attr': {'style': 'display: flex; flex-direction: column; gap: 20px;'}}) }}
+        
+        <div>
+            {{ form_label(orderForm.customer, null, {'label_attr': {'style': 'display: block; margin-bottom: 8px; font-weight: 500; color: #475569;'}}) }}
+            {{ form_widget(orderForm.customer, {'attr': {'style': 'width: 100%; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 1rem;'}}) }}
+            {{ form_errors(orderForm.customer) }}
+        </div>
+
+        <div>
+            {{ form_label(orderForm.status, null, {'label_attr': {'style': 'display: block; margin-bottom: 8px; font-weight: 500; color: #475569;'}}) }}
+            {{ form_widget(orderForm.status, {'attr': {'style': 'width: 100%; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 1rem;'}}) }}
+            {{ form_errors(orderForm.status) }}
+        </div>
+
+        <div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <label style="display: block; font-weight: 500; color: #475569;">Order Items</label>
+                <button type="button" id="add-item-btn" style="background: #10b981; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 500; cursor: pointer; font-size: 0.875rem;">
+                    + Add Item
+                </button>
+            </div>
+            
+            <div id="order-items-list" data-prototype="{{ form_widget(orderForm.orderItems.vars.prototype)|e('html_attr') }}" data-widget-counter="{{ orderForm.orderItems|length }}">
+                {% for item in orderForm.orderItems %}
+                    <div class="order-item-row" data-index="{{ loop.index0 }}" style="display: flex; gap: 12px; margin-bottom: 12px; padding: 16px; background: #f8fafc; border-radius: 8px; align-items: flex-end;">
+                        <div style="flex: 1;">
+                            {{ form_label(item.product, null, {'label_attr': {'style': 'display: block; margin-bottom: 4px; font-weight: 500; color: #475569; font-size: 0.875rem;'}}) }}
+                            {{ form_widget(item.product, {'attr': {'style': 'width: 100%; padding: 8px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.875rem;'}}) }}
+                            {{ form_errors(item.product) }}
+                        </div>
+                        <div style="width: 120px;">
+                            {{ form_label(item.quantity, null, {'label_attr': {'style': 'display: block; margin-bottom: 4px; font-weight: 500; color: #475569; font-size: 0.875rem;'}}) }}
+                            {{ form_widget(item.quantity, {'attr': {'style': 'width: 100%; padding: 8px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.875rem;'}}) }}
+                            {{ form_errors(item.quantity) }}
+                        </div>
+                        <div style="width: 40px;">
+                            <button type="button" class="remove-item-btn" style="background: #ef4444; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 0.875rem; height: 38px;">
+                                ×
+                            </button>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            {{ form_errors(orderForm.orderItems) }}
+        </div>
+
+        <div style="display: flex; gap: 12px; margin-top: 8px;">
+            <button type="submit" style="background: #3b82f6; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 500; cursor: pointer;">
+                Update Order
+            </button>
+            <a href="{{ path('staff_order_show', {id: order.id}) }}" style="background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 500; display: inline-block;">
+                Cancel
+            </a>
+        </div>
+
+        {{ form_end(orderForm) }}
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const itemsList = document.getElementById('order-items-list');
+    const addButton = document.getElementById('add-item-btn');
+    
+    // Get current item count from existing rows
+    let itemCount = parseInt(itemsList.dataset.widgetCounter) || itemsList.querySelectorAll('.order-item-row').length;
+    
+    // Get products data for the select options
+    const products = [
+        {% for product in products %}
+        {id: {{ product.id }}, name: "{{ product.name|e('js') }}", price: {{ product.price }}},
+        {% endfor %}
+    ];
+
+    addButton.addEventListener('click', function() {
+        // Create the new row structure
+        const newRow = document.createElement('div');
+        newRow.className = 'order-item-row';
+        newRow.setAttribute('data-index', itemCount);
+        newRow.style.cssText = 'display: flex; gap: 12px; margin-bottom: 12px; padding: 16px; background: #f8fafc; border-radius: 8px; align-items: flex-end;';
+        
+        // Product select
+        const productDiv = document.createElement('div');
+        productDiv.style.cssText = 'flex: 1;';
+        const productLabel = document.createElement('label');
+        productLabel.textContent = 'Product';
+        productLabel.style.cssText = 'display: block; margin-bottom: 4px; font-weight: 500; color: #475569; font-size: 0.875rem;';
+        const productSelect = document.createElement('select');
+        productSelect.name = `order[orderItems][${itemCount}][product]`;
+        productSelect.required = true;
+        productSelect.style.cssText = 'width: 100%; padding: 8px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.875rem;';
+        
+        // Add default option
+        const defaultOption = document.createElement('option');
+        defaultOption.value = '';
+        defaultOption.textContent = 'Select product';
+        productSelect.appendChild(defaultOption);
+        
+        // Add product options
+        products.forEach(function(product) {
+            const option = document.createElement('option');
+            option.value = product.id;
+            option.textContent = product.name + ' - ₱' + product.price.toFixed(2);
+            productSelect.appendChild(option);
+        });
+        
+        productDiv.appendChild(productLabel);
+        productDiv.appendChild(productSelect);
+        
+        // Quantity input
+        const quantityDiv = document.createElement('div');
+        quantityDiv.style.cssText = 'width: 120px;';
+        const quantityLabel = document.createElement('label');
+        quantityLabel.textContent = 'Quantity';
+        quantityLabel.style.cssText = 'display: block; margin-bottom: 4px; font-weight: 500; color: #475569; font-size: 0.875rem;';
+        const quantityInput = document.createElement('input');
+        quantityInput.type = 'number';
+        quantityInput.name = `order[orderItems][${itemCount}][quantity]`;
+        quantityInput.required = true;
+        quantityInput.min = 1;
+        quantityInput.value = 1;
+        quantityInput.style.cssText = 'width: 100%; padding: 8px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.875rem;';
+        
+        quantityDiv.appendChild(quantityLabel);
+        quantityDiv.appendChild(quantityInput);
+        
+        // Remove button
+        const removeDiv = document.createElement('div');
+        removeDiv.style.cssText = 'width: 40px;';
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'remove-item-btn';
+        removeBtn.textContent = '×';
+        removeBtn.style.cssText = 'background: #ef4444; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 0.875rem; height: 38px;';
+        removeDiv.appendChild(removeBtn);
+        
+        // Assemble the row
+        newRow.appendChild(productDiv);
+        newRow.appendChild(quantityDiv);
+        newRow.appendChild(removeDiv);
+        
+        // Add to list
+        itemsList.appendChild(newRow);
+        itemCount++;
+        itemsList.dataset.widgetCounter = itemCount;
+    });
+
+    // Remove item functionality
+    itemsList.addEventListener('click', function(e) {
+        if (e.target.classList.contains('remove-item-btn')) {
+            const row = e.target.closest('.order-item-row');
+            if (row && itemsList.querySelectorAll('.order-item-row').length > 1) {
+                row.remove();
+            } else {
+                alert('You must have at least one order item.');
+            }
+        }
+    });
+});
+</script>
+{% endblock %}
+

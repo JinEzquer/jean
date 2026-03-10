@@ -1,0 +1,30 @@
+/* Admin shared styles moved from templates/admin/base.html.twig */
+body{margin:0}
+.admin-shell{display:flex;min-height:100vh}
+.admin-aside{width:240px;color:#e5eff7;padding:16px 12px;display:flex;flex-direction:column;gap:12px;
+  background:#0b1f2d;
+}
+@keyframes azureFlow{0%{background-position:0% 50%, 100% 50%, 0% 50%}50%{background-position:100% 50%, 0% 50%, 100% 50%}100%{background-position:0% 50%, 100% 50%, 0% 50%}}
+.admin-brand{font-weight:900;color:#fff;margin-bottom:10px}
+.profile{display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;background:rgba(255,255,255,.05)}
+.avatar{width:80px;height:80px;border-radius:50%;overflow:hidden;background:#e6f3ff;display:flex;align-items:center;justify-content:center}
+.avatar img{width:100%;height:100%;object-fit:cover;display:block}
+.meta{display:flex;flex-direction:column;line-height:1.1}
+.meta .name{font-weight:800;color:#fff}
+.status{display:flex;align-items:center;gap:6px;font-weight:700;color:#1e90ff}
+.status .dot{width:10px;height:10px;border-radius:50%;background:#1e90ff;animation:blink 1.2s steps(1,end) infinite}
+@keyframes blink{0%{opacity:1}50%{opacity:.1}100%{opacity:1}}
+.status.offline{color:#cbd5e1}
+.status.offline .dot{background:#94a3b8;box-shadow:none;animation:none}
+.admin-nav a{display:flex;align-items:center;gap:10px;color:#cbd5e1;text-decoration:none;padding:8px 10px;border-radius:8px}
+.admin-nav a:hover{background:rgba(255,255,255,.06);color:#fff}
+.admin-nav .icon{width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center}
+.admin-nav .icon svg{width:18px;height:18px;stroke:currentColor;fill:none}
+.admin-sep{height:2px;background:linear-gradient(90deg,#1e90ff,#dc2626,#1e90ff);border-radius:2px;opacity:.95;margin:6px 6px 2px;background-size:200% 100%;animation:sepSlide 6s linear infinite}
+@keyframes sepSlide{0%{background-position:0% 50%}100%{background-position:100% 50%}}
+.admin-main{flex:1;background:#f8fafc}
+.admin-top{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid #1f3a50;background:#fff}
+.admin-content{padding:18px}
+.btn{display:inline-flex;align-items:center;gap:8px;background:#1e90ff;color:#fff;border:none;border-radius:10px;padding:8px 12px;font-weight:700;text-decoration:none}
+.btn.plain{background:transparent;color:#cbd5e1;border:1px solid rgba(255,255,255,.2)}
+.btn.plain:hover{background:rgba(255,255,255,.06);color:#fff}

@@ -1,0 +1,222 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block admin_content %}
+  <div style="width: 100%; overflow-x: auto;">
+  <style>
+    .kpis{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:14px;margin-bottom:16px;width:100%}
+    .kpi{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:12px 14px}
+    .kpi .label{font-size:12px;color:#64748b;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
+    .kpi .val{font-size:24px;font-weight:900;color:#0f172a}
+    /* Colorized KPI boxes with subtle gradients */
+    /* 1) Azure */
+    .kpis .kpi:nth-child(1){
+      background:linear-gradient(135deg,#00BFFF 0%, #33CCFF 100%);
+      border-color:#00BFFF
+    }
+    .kpis .kpi:nth-child(1) .label,.kpis .kpi:nth-child(1) .val{color:#ffffff}
+
+    /* 2) Vivid Red */
+    .kpis .kpi:nth-child(2){
+      background:linear-gradient(135deg,#D72638 0%, #FF5A6A 100%);
+      border-color:#D72638
+    }
+    .kpis .kpi:nth-child(2) .label,.kpis .kpi:nth-child(2) .val{color:#ffffff}
+
+    /* 3) Dark Azure */
+    .kpis .kpi:nth-child(3){
+      background:linear-gradient(135deg,#005F99 0%, #0B77B5 100%);
+      border-color:#005F99
+    }
+    .kpis .kpi:nth-child(3) .label,.kpis .kpi:nth-child(3) .val{color:#ffffff}
+
+    /* 4) Total Price — vivid azure */
+    .kpis .kpi:nth-child(4){
+      background:linear-gradient(135deg,#007FFF 0%, #00BFFF 100%);
+      border-color:#007FFF
+    }
+    .kpis .kpi:nth-child(4) .label,.kpis .kpi:nth-child(4) .val{color:#ffffff}
+    .grid-2{display:grid;grid-template-columns:repeat(auto-fit, minmax(400px, 1fr));gap:14px;width:100%}
+    .card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;width:100%}
+    /* Use a lighter variant of the sidebar color (#0f2433) for section dividers */
+    .card header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid #1f3a50;background:#f5f5f0;border-top-left-radius:12px;border-top-right-radius:12px}
+    .card .body{padding:12px 14px}
+    table{width:100%;border-collapse:separate;border-spacing:0;font-size:13px}
+    th{background:#f5f5f0;text-align:left;padding:8px 10px;font-weight:800;color:#64748b}
+    td{padding:8px 10px;border-top:1px solid #e5e7eb}
+    .btn{display:inline-flex;align-items:center;gap:6px;background:#0f6bdc;color:#fff;border:none;border-radius:8px;padding:6px 10px;font-weight:700;text-decoration:none;font-size:12px}
+    .btn.min{padding:4px 8px;border-radius:6px}
+    .btn.alt{background:#0b3c6f}
+    .btn.danger{background:#ef4444}
+    @media(max-width:1100px){.kpis{grid-template-columns:repeat(2,1fr)}.grid-2{grid-template-columns:1fr}}
+  </style>
+
+  {# KPIs #}
+  {% set totalProducts = products|length %}
+  {% set catMap = {} %}
+  {% for p in products %}
+    {% set key = p.category ? p.category.name : 'Uncategorized' %}
+    {% set catMap = catMap|merge({ (key): (catMap[key]|default(0) + 1) }) %}
+  {% endfor %}
+  {% set categoriesCount = catMap|length %}
+  {% set expiring7 = 0 %}
+  {% set nowU = "now"|date('U') %}
+  {% for p in products %}
+    {% if p.expiryDate is not null %}
+      {% set days = (p.expiryDate|date('U') - nowU) / 86400 %}
+      {% if days >= 0 and days <= 7 %}{% set expiring7 = expiring7 + 1 %}{% endif %}
+    {% endif %}
+  {% endfor %}
+  {% set totalPrice = 0 %}
+  {% for p in products %}{% set totalPrice = totalPrice + (p.price ?? 0) %}{% endfor %}
+
+  <section class="kpis">
+    <div class="kpi"><div class="label">Total Products</div><div class="val">{{ totalProducts }}</div></div>
+    <div class="kpi"><div class="label">Categories</div><div class="val">{{ categoriesCount }}</div></div>
+    <div class="kpi"><div class="label">Expiring ≤ 7 days</div><div class="val">{{ expiring7 }}</div></div>
+    <div class="kpi"><div class="label">Total Price</div><div class="val">₱{{ totalPrice }}</div></div>
+  </section>
+
+  <section class="grid-2" style="margin-bottom:14px">
+    <div class="card">
+      <header>
+        <div style="font-weight:800">Recent Products</div>
+        <a class="btn min" href="{{ path('app_admin_products') }}">See all →</a>
+      </header>
+      <div class="body">
+        {% set recent = products|reverse|slice(0,5) %}
+        <table>
+          <thead><tr><th>Product Name</th><th style="text-align:right">Price</th></tr></thead>
+          <tbody>
+          {% for p in recent %}
+            <tr><td>{{ p.name }}</td><td style="text-align:right">{{ p.price|default(0) }}</td></tr>
+          {% else %}
+            <tr><td colspan="2">No products yet.</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <header><div style="font-weight:800">Products per Category</div></header>
+      <div class="body">
+        <canvas id="chartByCategory" style="width:100%;height:260px"></canvas>
+        <div id="chartByCategoryEmpty" style="display:none;text-align:center;padding:40px;color:#94a3b8;">
+          <p>No products available to display</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <section class="grid-2">
+    <div class="card">
+      <header><div style="font-weight:800">Expiry Status</div></header>
+      <div class="body">
+        <canvas id="chartExpiry" style="width:100%;height:260px"></canvas>
+        <div id="chartExpiryEmpty" style="display:none;text-align:center;padding:40px;color:#94a3b8;">
+          <p>No products available to display</p>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <header><div style="font-weight:800">Price Trend</div></header>
+      <div class="body">
+        <canvas id="chartPrice" style="width:100%;height:260px"></canvas>
+        <div id="chartPriceEmpty" style="display:none;text-align:center;padding:40px;color:#94a3b8;">
+          <p>No products available to display</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script>
+    (function(){
+      const products = [
+        {% for p in products %}
+          { id: {{ p.id }}, name: {{ p.name|json_encode|raw }}, price: {{ (p.price is defined and p.price is not null) ? p.price : '0' }}, category: {{ (p.category ? p.category.name : null)|json_encode|raw }}, expiry: {{ (p.expiryDate ? p.expiryDate|date('Y-m-d') : null)|json_encode|raw }} }
+          {% if not loop.last %},{% endif %}
+        {% endfor %}
+      ];
+
+      function daysUntil(dateStr){ if(!dateStr) return Infinity; const today=new Date(); today.setHours(0,0,0,0); const d=new Date(dateStr+'T00:00:00'); return Math.ceil((d-today)/86400000); }
+
+      // Products per Category (colored by category)
+      try{
+        const el = document.getElementById('chartByCategory');
+        const emptyEl = document.getElementById('chartByCategoryEmpty');
+        if(el){
+          if(products.length > 0){
+            const counts={}; products.forEach(p=>{ const k=p.category||'Uncategorized'; counts[k]=(counts[k]||0)+1; });
+            const labels=Object.keys(counts);
+            const dataVals=labels.map(l=>counts[l]);
+            const colors=labels.map(l=>{ const n=(l||'').toLowerCase();
+              if(n.includes('red')) return '#D72638';         // vivid red (Red Meat)
+              if(n.includes('white')) return '#ffffff';        // white (White Meat)
+              if(n.includes('seafood')||n.includes('fish')) return '#00BFFF'; // azure (Seafood)
+              if(n.includes('processed')) return '#8B4513';    // brown (Processed)
+              return '#0ea5e9';                                // default azure
+            });
+            const borders=colors.map(c=> c==='#ffffff' ? '#1f3a50' : c);
+            if(el._chart) el._chart.destroy();
+            el._chart=new Chart(el,{
+              type:'bar',
+              data:{labels,datasets:[{label:'Products',data:dataVals,backgroundColor:colors,borderColor:borders,borderWidth:1}]},
+              options:{responsive:true,maintainAspectRatio:false,scales:{y:{beginAtZero:true,ticks:{precision:0}}}}
+            });
+            if(emptyEl) emptyEl.style.display='none';
+          } else {
+            if(emptyEl) emptyEl.style.display='block';
+            if(el) el.style.display='none';
+          }
+        }
+      }catch(e){ 
+        console.error('Chart error:', e);
+        const emptyEl = document.getElementById('chartByCategoryEmpty');
+        if(emptyEl) emptyEl.style.display='block';
+      }
+
+      // Expiry Status
+      try{
+        const el = document.getElementById('chartExpiry');
+        const emptyEl = document.getElementById('chartExpiryEmpty');
+        if(el){
+          if(products.length > 0){
+            let expired=0,soon=0,fresh=0,nodate=0; products.forEach(p=>{ if(!p.expiry){ nodate++; return; } const d=daysUntil(p.expiry); if(d<0) expired++; else if(d<=7) soon++; else fresh++; });
+            if(el._chart) el._chart.destroy();
+            el._chart=new Chart(el,{type:'doughnut',data:{labels:['Expired','Expiring (<7d)','Fresh','No Date'],datasets:[{data:[expired,soon,fresh,nodate],backgroundColor:['#ef4444','#f59e0b','#22c55e','#94a3b8']}]} ,options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{position:'bottom'}}}});
+            if(emptyEl) emptyEl.style.display='none';
+          } else {
+            if(emptyEl) emptyEl.style.display='block';
+            if(el) el.style.display='none';
+          }
+        }
+      }catch(e){ 
+        console.error('Chart error:', e);
+        const emptyEl = document.getElementById('chartExpiryEmpty');
+        if(emptyEl) emptyEl.style.display='block';
+      }
+
+      // Price Trend
+      try{
+        const el = document.getElementById('chartPrice');
+        const emptyEl = document.getElementById('chartPriceEmpty');
+        if(el){
+          if(products.length > 0){
+            const labels = products.map(p=>p.name); const values = products.map(p=>Number(p.price)||0);
+            if(el._chart) el._chart.destroy();
+            el._chart=new Chart(el,{type:'line',data:{labels,datasets:[{label:'Price',data:values,borderColor:'#0ea5e9',backgroundColor:'#0ea5e933',tension:.25,fill:true}]},options:{responsive:true,maintainAspectRatio:false,scales:{y:{beginAtZero:true}}}});
+            if(emptyEl) emptyEl.style.display='none';
+          } else {
+            if(emptyEl) emptyEl.style.display='block';
+            if(el) el.style.display='none';
+          }
+        }
+      }catch(e){ 
+        console.error('Chart error:', e);
+        const emptyEl = document.getElementById('chartPriceEmpty');
+        if(emptyEl) emptyEl.style.display='block';
+      }
+    })();
+  </script>
+  </div>
+{% endblock %}

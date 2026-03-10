@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Patrick's Cold Cuts</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+            position: relative;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #6b73ff 100%);
+        }
+
+        /* Animated background shapes */
+        .bg-shapes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .shape {
+            position: absolute;
+            opacity: 0.1;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .shape-1 {
+            width: 300px;
+            height: 300px;
+            background: linear-gradient(45deg, #fff, transparent);
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            top: 10%;
+            left: 5%;
+            animation-delay: 0s;
+        }
+
+        .shape-2 {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, #fff, transparent);
+            border-radius: 50%;
+            top: 60%;
+            right: 10%;
+            animation-delay: 2s;
+        }
+
+        .shape-3 {
+            width: 150px;
+            height: 150px;
+            background: linear-gradient(225deg, #fff, transparent);
+            border-radius: 20px;
+            bottom: 15%;
+            left: 20%;
+            animation-delay: 4s;
+        }
+
+        .shape-4 {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(90deg, #fff, transparent);
+            border-radius: 50%;
+            top: 30%;
+            right: 30%;
+            animation-delay: 1s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(120deg); }
+            66% { transform: translate(-20px, 20px) rotate(240deg); }
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            z-index: 1;
+        }
+
+        .left-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 60px;
+            color: white;
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            width: 50%;
+            z-index: 2;
+        }
+
+        .logo {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 60px;
+        }
+
+        .logo-square {
+            width: 12px;
+            height: 12px;
+            background: white;
+            border-radius: 2px;
+        }
+
+        .logo-rect {
+            width: 12px;
+            height: 24px;
+            background: white;
+            border-radius: 2px;
+        }
+
+        .welcome-title {
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.1;
+        }
+
+        .welcome-underline {
+            width: 80px;
+            height: 4px;
+            background: white;
+            margin-bottom: 40px;
+        }
+
+        .welcome-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            opacity: 0.9;
+            max-width: 500px;
+            margin-bottom: 50px;
+        }
+
+        .learn-more-btn {
+            display: inline-block;
+            padding: 14px 32px;
+            background: linear-gradient(135deg, #ff6b6b, #ff8e53);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+            max-width: fit-content;
+        }
+
+        .learn-more-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.3);
+        }
+
+        .right-panel {
+            flex: 1;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 40px;
+            position: fixed;
+            right: 0;
+            top: 0;
+            height: 100vh;
+            width: 50%;
+            z-index: 2;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .form-container {
+            background: rgba(30, 30, 60, 0.7);
+            backdrop-filter: blur(10px);
+            padding: 50px 40px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            margin: 20px 0;
+        }
+
+        .form-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .form-underline {
+            width: 60px;
+            height: 3px;
+            background: white;
+            margin-bottom: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            color: white;
+            font-weight: 500;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .form-control:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #ff6b6b, #ff8e53);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.4);
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            text-decoration: none;
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .social-icon:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        .alert-success {
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid rgba(34, 197, 94, 0.4);
+        }
+
+        .alert-error {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 25px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+
+        .login-link a {
+            color: white;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        .text-muted {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+
+        .form-errors {
+            color: #ff6b6b;
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 968px) {
+            .left-panel {
+                width: 100%;
+                position: relative;
+                height: auto;
+                min-height: 50vh;
+            }
+
+            .right-panel {
+                width: 100%;
+                position: relative;
+                height: auto;
+                min-height: 50vh;
+            }
+
+            .welcome-title {
+                font-size: 2.5rem;
+            }
+
+            body {
+                overflow-y: auto;
+                height: auto;
+                min-height: 100vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+        <div class="shape shape-4"></div>
+    </div>
+
+    <div class="container">
+        <div class="left-panel">
+            <div class="logo">
+                <div class="logo-rect"></div>
+                <div class="logo-square"></div>
+                <div class="logo-rect"></div>
+                <div class="logo-square"></div>
+            </div>
+            <h1 class="welcome-title">Welcome!</h1>
+            <div class="welcome-underline"></div>
+            <p class="welcome-text">
+                Join Patrick's Cold Cuts today! Create your account to access exclusive deals, track your orders, and enjoy our premium selection of quality meats and deli products.
+            </p>
+            <a href="{{ path('app_home') }}" class="learn-more-btn">Learn More</a>
+        </div>
+
+        <div class="right-panel">
+            <div class="form-container">
+                <h2 class="form-title">Sign up</h2>
+                <div class="form-underline"></div>
+                
+                {% for flashError in app.flashes('success') %}
+                    <div class="alert alert-success">{{ flashError }}</div>
+                {% endfor %}
+                
+                {% for flashError in app.flashes('error') %}
+                    <div class="alert alert-error">{{ flashError }}</div>
+                {% endfor %}
+
+                {% if not registrationForm.vars.valid %}
+                    <div class="alert alert-error">
+                        Please correct the errors below and try again.
+                    </div>
+                {% endif %}
+
+                {{ form_start(registrationForm, {'attr': {'class': 'login-form'}}) }}
+                    {{ form_errors(registrationForm) }}
+                    <div class="form-group">
+                        {{ form_label(registrationForm.email, null, {'label_attr': {'style': 'color: white;'}}) }}
+                        {{ form_widget(registrationForm.email, {'attr': {
+                            'class': 'form-control',
+                            'placeholder': 'Enter your email',
+                            'autofocus': true
+                        }}) }}
+                        <div class="form-errors">{{ form_errors(registrationForm.email) }}</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        {{ form_label(registrationForm.firstName, null, {'label_attr': {'style': 'color: white;'}}) }}
+                        {{ form_widget(registrationForm.firstName, {'attr': {
+                            'class': 'form-control',
+                            'placeholder': 'Enter your first name'
+                        }}) }}
+                        <div class="form-errors">{{ form_errors(registrationForm.firstName) }}</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        {{ form_label(registrationForm.lastName, null, {'label_attr': {'style': 'color: white;'}}) }}
+                        {{ form_widget(registrationForm.lastName, {'attr': {
+                            'class': 'form-control',
+                            'placeholder': 'Enter your last name'
+                        }}) }}
+                        <div class="form-errors">{{ form_errors(registrationForm.lastName) }}</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        {{ form_label(registrationForm.plainPassword.first, 'Password', {'label_attr': {'style': 'color: white;'}}) }}
+                        {{ form_widget(registrationForm.plainPassword.first, {'attr': {
+                            'class': 'form-control',
+                            'placeholder': 'Create a password',
+                            'autocomplete': 'new-password'
+                        }}) }}
+                        <div class="form-errors">{{ form_errors(registrationForm.plainPassword.first) }}</div>
+                        <div class="text-muted">Password must be at least 6 characters long</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        {{ form_label(registrationForm.plainPassword.second, 'Repeat Password', {'label_attr': {'style': 'color: white;'}}) }}
+                        {{ form_widget(registrationForm.plainPassword.second, {'attr': {
+                            'class': 'form-control',
+                            'placeholder': 'Confirm your password',
+                            'autocomplete': 'new-password'
+                        }}) }}
+                        <div class="form-errors">{{ form_errors(registrationForm.plainPassword.second) }}</div>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Submit</button>
+                    
+                    <div class="login-link">
+                        Already have an account? <a href="{{ path('app_login') }}">Sign in here</a>
+                    </div>
+                {{ form_end(registrationForm) }}
+
+                <div class="social-icons">
+                    <a href="#" class="social-icon">f</a>
+                    <a href="#" class="social-icon">📷</a>
+                    <a href="#" class="social-icon">P</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

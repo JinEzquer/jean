@@ -1,0 +1,236 @@
+{% extends 'staff/base.html.twig' %}
+
+{% block title %}My Profile - Patrick's Cold Cuts{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .profile-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .page-title {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 40px;
+            text-align: center;
+            letter-spacing: -0.5px;
+        }
+        .profile-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            position: relative;
+            overflow: hidden;
+        }
+        .profile-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+            border-bottom: 2px solid #f1f5f9;
+        }
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+        .avatar svg {
+            width: 60px;
+            height: 60px;
+            fill: white;
+        }
+        .profile-info h2 {
+            margin: 0 0 8px 0;
+            font-size: 1.75rem;
+            color: #1e293b;
+            font-weight: 700;
+        }
+        .profile-info p {
+            margin: 0;
+            color: #64748b;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #f1f5f9;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 24px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+        .info-grid {
+            display: grid;
+            gap: 16px;
+        }
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            background: #f8fafc;
+            border-radius: 12px;
+            transition: all 0.2s;
+            border: 1px solid #f1f5f9;
+        }
+        .info-item:hover {
+            background: #f1f5f9;
+            transform: translateX(5px);
+        }
+        .info-label {
+            color: #64748b;
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .info-label::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: #cbd5e1;
+            border-radius: 50%;
+        }
+        .info-value {
+            color: #1e293b;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .status-badge.active {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+        .status-badge.inactive {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+        .change-password-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 28px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 32px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        .change-password-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+        .change-password-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+    </style>
+{% endblock %}
+
+{% block staff_content %}
+<div class="profile-container">
+    <h1 class="page-title">My Profile</h1>
+    
+    <div class="profile-card">
+        <div class="profile-header">
+            <div class="avatar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="8" r="4" />
+                    <path d="M12 14c-4.42 0-8 2.69-8 6v2h16v-2c0-3.31-3.58-6-8-6z" />
+                </svg>
+            </div>
+            <div class="profile-info">
+                <h2>{{ app.user.firstName }} {{ app.user.lastName }}</h2>
+                <p>{{ app.user.email }}</p>
+            </div>
+        </div>
+
+        <div>
+            <h3 class="section-title">Account Information</h3>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Email</span>
+                    <span class="info-value">{{ app.user.email }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Name</span>
+                    <span class="info-value">{{ app.user.firstName }} {{ app.user.lastName }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Role</span>
+                    <span class="info-value">Staff</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Account Status</span>
+                    <span class="info-value">
+                        {% if app.user.isActive %}
+                            <span class="status-badge active">✓ Active</span>
+                        {% else %}
+                            <span class="status-badge inactive">✗ Inactive</span>
+                        {% endif %}
+                    </span>
+                </div>
+                {% if app.user.lastLogin %}
+                <div class="info-item">
+                    <span class="info-label">Last Login</span>
+                    <span class="info-value">{{ app.user.lastLogin|date('M d, Y H:i') }}</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <a href="{{ path('staff_change_password') }}" class="change-password-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            Change Password
+        </a>
+    </div>
+</div>
+{% endblock %}

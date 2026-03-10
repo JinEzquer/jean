@@ -1,67 +1,440 @@
-{% extends 'base.html.twig' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - Patrick's Cold Cuts</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            overflow: hidden;
+            position: relative;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #6b73ff 100%);
+        }
 
-{% block title %}Login · Patrick's Cold Cuts{% endblock %}
+        /* Animated background shapes */
+        .bg-shapes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
 
-{% block body %}
-<style>
-  :root{--accent:#005F99;--accent2:#00BFFF;--danger:#D72638;--border:#e5e7eb;--card:#fff;--bg:linear-gradient(135deg,#f0f9ff,#e6f7ff)}
-  body{margin:0}
-  .shell{min-height:100vh;display:grid;place-items:center;background:var(--bg);}
-  .card{width:100%;max-width:460px;background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.06);overflow:hidden}
-  .head{display:flex;align-items:center;gap:10px;padding:18px;border-bottom:1px solid var(--border);background:#fff}
-  .logo{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:#e6f3ff;overflow:hidden}
-  .title{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:.03em;color:var(--accent)}
-  .body{padding:20px}
-  .field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
-  label{font-weight:700;color:#334155;font-size:12px}
-  input[type=email],input[type=password]{border:2px solid var(--border);border-radius:10px;padding:12px 14px;font-family:'Arimo',sans-serif;font-size:14px;outline:none}
-  input[type=email]:focus,input[type=password]:focus{border-color:var(--accent2);box-shadow:0 0 0 3px rgba(0,191,255,.15)}
-  .row{display:flex;align-items:center;justify-content:space-between;margin:8px 0 18px}
-  .remember{display:flex;align-items:center;gap:8px;color:#334155;font-size:13px}
-  .btn{display:inline-flex;align-items:center;justify-content:center;width:100%;gap:8px;background:#D72638;color:#fff;border:none;border-radius:10px;padding:12px 16px;font-weight:800;cursor:pointer;transition:.2s}
-  .btn:hover{filter:brightness(.95);transform:translateY(-1px);box-shadow:0 6px 14px rgba(215,38,56,.25)}
-  .alert{background:#fee2e2;color:#991b1b;border:1px solid #fecaca;padding:10px 12px;border-radius:10px;margin-bottom:12px}
-  .muted{color:#64748b;font-size:12px;margin-top:8px}
-  .link{color:var(--accent);text-decoration:none;font-weight:700}
-  .footer{border-top:1px solid var(--border);background:#fafafa;padding:12px 18px;color:#64748b;font-size:12px}
-</style>
+        .shape {
+            position: absolute;
+            opacity: 0.1;
+            animation: float 20s infinite ease-in-out;
+        }
 
-<div class="shell">
-  <div class="card">
-    <div class="head">
-      <div class="logo"><img src="{{ asset('images/logo.png') }}" alt="Logo" style="width:100%;height:100%;object-fit:contain"></div>
-      <div class="title">Login</div>
+        .shape-1 {
+            width: 300px;
+            height: 300px;
+            background: linear-gradient(45deg, #fff, transparent);
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            top: 10%;
+            left: 5%;
+            animation-delay: 0s;
+        }
+
+        .shape-2 {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, #fff, transparent);
+            border-radius: 50%;
+            top: 60%;
+            right: 10%;
+            animation-delay: 2s;
+        }
+
+        .shape-3 {
+            width: 150px;
+            height: 150px;
+            background: linear-gradient(225deg, #fff, transparent);
+            border-radius: 20px;
+            bottom: 15%;
+            left: 20%;
+            animation-delay: 4s;
+        }
+
+        .shape-4 {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(90deg, #fff, transparent);
+            border-radius: 50%;
+            top: 30%;
+            right: 30%;
+            animation-delay: 1s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(120deg); }
+            66% { transform: translate(-20px, 20px) rotate(240deg); }
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+        }
+
+        .left-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 60px;
+            color: white;
+            position: relative;
+            z-index: 2;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 60px;
+        }
+
+        .logo img {
+            height: 100px;
+            width: auto;
+            border-radius: 50%;
+            object-fit: contain;
+            background: white;
+            padding: 10px;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+            transition: transform 0.3s ease;
+        }
+        
+        .logo img:hover {
+            transform: scale(1.05);
+        }
+
+        .logo-text {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .welcome-title {
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.1;
+        }
+
+        .welcome-underline {
+            width: 80px;
+            height: 4px;
+            background: white;
+            margin-bottom: 40px;
+        }
+
+        .welcome-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            opacity: 0.9;
+            max-width: 500px;
+            margin-bottom: 50px;
+        }
+
+        .learn-more-btn {
+            display: inline-block;
+            padding: 14px 32px;
+            background: linear-gradient(135deg, #ff6b6b, #ff8e53);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+            max-width: fit-content;
+        }
+
+        .learn-more-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.3);
+        }
+
+        .right-panel {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .form-container {
+            background: rgba(30, 30, 60, 0.7);
+            backdrop-filter: blur(10px);
+            padding: 50px 40px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .form-logo img {
+            height: 80px;
+            width: auto;
+            border-radius: 50%;
+            object-fit: contain;
+            background: white;
+            padding: 8px;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+            transition: transform 0.3s ease;
+        }
+        
+        .form-logo img:hover {
+            transform: scale(1.05);
+        }
+
+        .form-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .form-underline {
+            width: 60px;
+            height: 3px;
+            background: white;
+            margin-bottom: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            color: white;
+            font-weight: 500;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .form-control:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #ff6b6b, #ff8e53);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.4);
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            text-decoration: none;
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .social-icon:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            color: white;
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            font-size: 0.9rem;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 25px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+
+        .register-link a {
+            color: white;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+
+        .remember-me input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        @media (max-width: 968px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .left-panel {
+                padding: 40px 30px;
+                min-height: auto;
+            }
+
+            .welcome-title {
+                font-size: 2.5rem;
+            }
+
+            .right-panel {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+        <div class="shape shape-4"></div>
     </div>
-    <div class="body">
-      {% if error %}
-        <div class="alert">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-      {% endif %}
 
-      {% if app.user %}
-        <div class="muted">You are logged in as <strong>{{ app.user.userIdentifier }}</strong>. <a class="link" href="{{ path('app_logout') }}">Logout</a></div>
-      {% endif %}
-
-      <form method="post">
-        <div class="field">
-          <label for="inputEmail">Email</label>
-          <input type="email" value="{{ last_username }}" name="email" id="inputEmail" autocomplete="email" required autofocus>
-        </div>
-        <div class="field">
-          <label for="inputPassword">Password</label>
-          <input type="password" name="password" id="inputPassword" autocomplete="current-password" required>
-        </div>
-        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-
-        <div class="row">
-          <label class="remember"><input type="checkbox" name="_remember_me"> Remember me</label>
-          <span class="muted">Secure area</span>
+    <div class="container">
+        <div class="left-panel">
+            <div class="logo">
+                <div style="background: white; border-radius: 50%; padding: 10px; box-shadow: 0 6px 16px rgba(0,0,0,0.25); display: inline-flex; align-items: center; justify-content: center;">
+                    <img src="{{ asset('image/76468012-d5ef-4a7e-b2d5-d68451667914-removebg-preview.png') }}" alt="Patrick's Cold Cuts">
+                </div>
+                <div class="logo-text">Patrick's Cold Cuts</div>
+            </div>
+            <h1 class="welcome-title">Welcome!</h1>
+            <div class="welcome-underline"></div>
+            <p class="welcome-text">
+                Welcome to Patrick's Cold Cuts! Sign in to access your account and explore our premium selection of quality meats and deli products.
+            </p>
+            <a href="{{ path('app_home') }}" class="learn-more-btn">Learn More</a>
         </div>
 
-        <button class="btn" type="submit">Sign in</button>
-      </form>
+        <div class="right-panel">
+            <div class="form-container">
+                <div class="form-logo">
+                    <div style="background: white; border-radius: 50%; padding: 8px; box-shadow: 0 6px 16px rgba(0,0,0,0.25); display: inline-flex; align-items: center; justify-content: center;">
+                        <img src="{{ asset('image/76468012-d5ef-4a7e-b2d5-d68451667914-removebg-preview.png') }}" alt="Patrick's Cold Cuts">
+                    </div>
+                </div>
+                <h2 class="form-title">Sign in</h2>
+                <div class="form-underline"></div>
+                
+                {% if error %}
+                    <div class="alert">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                {% endif %}
+
+                <form method="post" class="login-form">
+                    <div class="form-group">
+                        <label for="inputEmail">Username</label>
+                        <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" placeholder="Enter your email" autocomplete="email" required autofocus>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="inputPassword">Password</label>
+                        <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Enter your password" autocomplete="current-password" required>
+                    </div>
+
+                    <div class="remember-me">
+                        <input type="checkbox" name="_remember_me" id="remember_me">
+                        <label for="remember_me" style="margin: 0; cursor: pointer;">Remember me</label>
+                    </div>
+
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                    <button type="submit" class="submit-btn">Submit</button>
+                    
+                    <div class="register-link">
+                        Don't have an account? <a href="{{ path('app_register') }}">Register here</a>
+                    </div>
+                </form>
+
+                <div class="social-icons">
+                    <a href="#" class="social-icon">f</a>
+                    <a href="#" class="social-icon">📷</a>
+                    <a href="#" class="social-icon">P</a>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="footer">© Patrick's Cold Cuts</div>
-  </div>
-</div>
-{% endblock %}
-
+</body>
+</html>

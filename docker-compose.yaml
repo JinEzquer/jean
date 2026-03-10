@@ -1,14 +1,15 @@
+# Kept for reference; not used by default. To run: docker compose -f docker-compose.legacy.yaml up -d
 services:
   mysql:
     image: mysql:8.0 
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: 123456
-      MYSQL_DATABASE: my
-      MYSQL_USER: PATRICKSCOLDCUTS
-      MYSQL_PASSWORD: 123456
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
-    - "3306:3306"
+    - "3308:3306"
     volumes:
     - mysql_data:/var/lib/mysql
     networks:
@@ -18,16 +19,16 @@ services:
     restart: unless-stopped
     environment:
      PMA_HOST: mysql
-     PMA_USER: PATRICKSCOLDCUTS
-     PMA_PASSWORD: 123456
+     PMA_USER: ${MYSQL_USER}
+     PMA_PASSWORD: ${MYSQL_PASSWORD}
     ports:
     - "8080:80"
     depends_on:
     - mysql
     networks:
     - mynetwork
+
 volumes:
   mysql_data:
 networks:
   mynetwork:
-    driver: bridge

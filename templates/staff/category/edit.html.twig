@@ -1,0 +1,42 @@
+{% extends 'staff/base.html.twig' %}
+
+{% block staff_content %}
+<div style="padding: 20px;">
+    <div style="margin-bottom: 24px;">
+        <a href="{{ path('staff_category_index') }}" style="color: #3b82f6; text-decoration: none; font-weight: 500; margin-bottom: 16px; display: inline-block;">
+            ← Back to Categories
+        </a>
+        <h1 style="font-size: 2rem; font-weight: 700; color: #1e293b; margin-top: 8px;">Edit Category</h1>
+    </div>
+
+    <div style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; max-width: 800px;">
+        {{ form_start(categoryForm, {'attr': {'style': 'display: flex; flex-direction: column; gap: 20px;'}}) }}
+        
+        <div style="display: grid; grid-template-columns: 1fr; gap: 20px;">
+            <div>
+                {{ form_label(categoryForm.name, null, {'label_attr': {'style': 'display: block; margin-bottom: 8px; font-weight: 500; color: #475569;'}}) }}
+                {{ form_widget(categoryForm.name, {'attr': {'style': 'width: 100%; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 1rem;', 'placeholder': 'Enter category name'}}) }}
+                {{ form_errors(categoryForm.name) }}
+            </div>
+
+            <div>
+                {{ form_label(categoryForm.description, null, {'label_attr': {'style': 'display: block; margin-bottom: 8px; font-weight: 500; color: #475569;'}}) }}
+                {{ form_widget(categoryForm.description, {'attr': {'style': 'width: 100%; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 1rem; min-height: 100px; resize: vertical;', 'placeholder': 'Enter category description (optional)'}}) }}
+                {{ form_errors(categoryForm.description) }}
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 12px; margin-top: 8px; justify-content: flex-end;">
+            <a href="{{ path('staff_category_index') }}" style="background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 500; display: inline-block;">
+                Cancel
+            </a>
+            <button type="submit" style="background: #3b82f6; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 500; cursor: pointer;">
+                Update Category
+            </button>
+        </div>
+
+        {{ form_end(categoryForm) }}
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,70 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block admin_content %}
+<div style="padding: 20px;">
+    <div style="margin-bottom: 24px;">
+        <a href="{{ path('admin_activity_logs') }}" style="color: #3b82f6; text-decoration: none; font-weight: 500; margin-bottom: 16px; display: inline-block;">
+            ← Back to Activity Logs
+        </a>
+        <h1 style="font-size: 2rem; font-weight: 700; color: #1e293b; margin-top: 8px;">Activity Log Details</h1>
+    </div>
+
+    <div style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px;">
+        <div style="display: grid; gap: 20px;">
+            <div style="padding-bottom: 16px; border-bottom: 1px solid #e2e8f0;">
+                <label style="display: block; font-size: 0.875rem; font-weight: 500; color: #64748b; margin-bottom: 4px;">Log ID</label>
+                <div style="font-size: 1.125rem; color: #1e293b; font-weight: 600;">#{{ log.id }}</div>
+            </div>
+
+            <div style="padding-bottom: 16px; border-bottom: 1px solid #e2e8f0;">
+                <label style="display: block; font-size: 0.875rem; font-weight: 500; color: #64748b; margin-bottom: 4px;">Username</label>
+                <div style="font-size: 1rem; color: #1e293b; font-weight: 500;">{{ log.username ?? 'N/A' }}</div>
+            </div>
+
+            <div style="padding-bottom: 16px; border-bottom: 1px solid #e2e8f0;">
+                <label style="display: block; font-size: 0.875rem; font-weight: 500; color: #64748b; margin-bottom: 4px;">Role</label>
+                <div>
+                    {% if log.userRole %}
+                        <span style="display: inline-block; padding: 6px 12px; background: #e0e7ff; color: #4338ca; border-radius: 6px; font-weight: 500;">
+                            {{ log.userRole|replace({'ROLE_': ''}) }}
+                        </span>
+                    {% else %}
+                        <span style="color: #94a3b8;">N/A</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div style="padding-bottom: 16px; border-bottom: 1px solid #e2e8f0;">
+                <label style="display: block; font-size: 0.875rem; font-weight: 500; color: #64748b; margin-bottom: 4px;">Action</label>
+                <div>
+                    <span style="display: inline-block; padding: 6px 12px; background: #f1f5f9; color: #475569; border-radius: 6px; font-weight: 500;">
+                        {{ log.action }}
+                    </span>
+                </div>
+            </div>
+
+            <div style="padding-bottom: 16px; border-bottom: 1px solid #e2e8f0;">
+                <label style="display: block; font-size: 0.875rem; font-weight: 500; color: #64748b; margin-bottom: 4px;">Target Data</label>
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; font-family: monospace; font-size: 0.875rem; color: #1e293b;">
+                    {{ log.getFormattedTargetData() }}
+                </div>
+            </div>
+
+            <div style="padding-bottom: 16px; border-bottom: 1px solid #e2e8f0;">
+                <label style="display: block; font-size: 0.875rem; font-weight: 500; color: #64748b; margin-bottom: 4px;">Raw Data</label>
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; font-family: monospace; font-size: 0.875rem; color: #1e293b; max-height: 300px; overflow-y: auto;">
+                    <pre>{{ log.targetData|json_encode(constant('JSON_PRETTY_PRINT')) }}</pre>
+                </div>
+            </div>
+
+            <div>
+                <label style="display: block; font-size: 0.875rem; font-weight: 500; color: #64748b; margin-bottom: 4px;">Date & Time</label>
+                <div style="font-size: 1rem; color: #1e293b; font-weight: 500;">
+                    {{ log.createdAt|date('F j, Y g:i A') }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
